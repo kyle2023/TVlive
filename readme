@@ -1,39 +1,25 @@
-
 # 📺 Live 频道资源站
 
-[![Website](https://img.shields.io/badge/Website-live.404003.xyz-blue)](https://live.404003.xyz)
-[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+**本站域名：** https://live.404003.xyz
 
-> ⚠️ **免责声明**  
 > 本站提供的直播源均采集自互联网，**仅供学习与交流使用**。  
-> 如有问题请联系管理员处理。
+> 如有侵权或违规内容，请及时联系我进行处理。
 
 ---
 
 ## 🖼️ 电视台 Logo 整合
 
-### 调用方式
-```bash
+**调用方式：**  
 https://live.404003.xyz/LOGO/{name}.png
-```
 
-### 使用说明
-- 替换`{name}`为频道名称（如`CCTV1`）
-- 支持PNG/JPG格式
-- 默认尺寸200×200px
-
-### 示例
-```markdown
-![CCTV1](https://live.404003.xyz/LOGO/CCTV1.png)
-```
+- 将 `{name}` 替换为频道名称（如 `CCTV1`、`HunanTV` 等）。
+- 支持自定义调用，适用于 IPTV 播放器等平台。
 
 ---
 
 ## 📣 获取更多资源
-[![WeChat](https://img.shields.io/badge/微信公众号-小白网络笔记-brightgreen)]
 
 欢迎关注微信公众号 **【小白网络笔记】**  
 持续更新实用网络资源与技术分享！
----
 
-🔄 最后更新：2025-06-05
+---
