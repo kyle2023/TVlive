@@ -12,7 +12,7 @@
 **调用方式：**  
 https://live.404003.xyz/LOGO/{name}.png
 
-- 将 `{name}` 替换为频道名称（如 `CCTV1`、`HunanTV` 等）。
+- 将 `{name}` 替换为频道名称（如 `CCTV1`、`湖南卫视` 等）。
 - 支持自定义调用，适用于 IPTV 播放器等平台。
 
 ---
