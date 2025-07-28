@@ -267,7 +267,7 @@ NewTV,#genre#
 新动漫[1920*1080],http://fjcm-2118.live.iptv.darwinchow.com/PLTV/88888888/224/3221227498/index.m3u8
 环球奇观[1920*1080],http://fjcm-2118.live.iptv.darwinchow.com/PLTV/88888888/224/3221227490/index.m3u8
 生态环境[1920*1080],http://fjcm-2118.live.iptv.darwinchow.com/PLTV/88888888/224/3221227494/index.m3u8
-中华特产1920*1080],http://fjcm-2118.live.iptv.darwinchow.com/PLTV/88888888/224/3221227510/index.m3u8
+中华特产1920*1080],http://fjcm-2118.live.iptv.darwinchow.com/PLTV/88888888/224/3221227502/index.m3u8
 优漫卡通[1024*576],http://fjcm-2118.live.iptv.darwinchow.com/PLTV/88888888/224/3221227339/index.m3u8
 先锋乒羽[768*576],http://fjcm-2118.live.iptv.darwinchow.com/PLTV/88888888/224/3221226851/index.m3u8
 先锋乒羽[785*576],http://fjcm-2115.live.iptv.darwinchow.com/PLTV/88888888/224/3221226851/index.m3u8
