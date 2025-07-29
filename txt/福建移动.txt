@@ -1,4 +1,6 @@
-#第三方代理？源于网络。调用地址：http://live.404003.xyz/txt/福建移动.txt
+#第三方代理？源于网络。调用地址：https://live.404003.xyz/txt/福建移动.txt
+#回看方式：http://fjcm-2115.live.iptv.darwinchow.com/TVOD/88888888/224/3221226908/index.m3u8?playseek=20250728190000-20250728193000
+
 央视,#genre#
 CCTV1[1920*1080],http://fjcm-2115.live.iptv.darwinchow.com/PLTV/88888888/224/3221226908/index.m3u8
 CCTV1[1920*1080],http://fjcm-2116.live.iptv.darwinchow.com/PLTV/88888888/224/3221225829/index.m3u8
