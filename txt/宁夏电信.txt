@@ -1,4 +1,5 @@
 #宁夏电信银河源，整理自网络，ID未去重
+央视,#genre#
 CCTV1[1920*1080],http://live-gitv-nx-yh.189smarthome.com/gitv_live/G_CCTV-1-HD-265-8M/G_CCTV-1-HD-265-8M.m3u8
 CCTV1[1920*1080],http://live-gitv-nx-yh.189smarthome.com/gitv_live/G_CCTV-1-CQ/G_CCTV-1-CQ.m3u8
 CCTV2[1920*1080],http://live-gitv-nx-yh.189smarthome.com/gitv_live/G_CCTV-2-CQ/G_CCTV-2-CQ.m3u8
