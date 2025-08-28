@@ -28,10 +28,9 @@ CGTN阿拉伯语,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000
 CGTN,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000009569/1.m3u8?channel-id=ystenlive&Contentid=1000000002000009569&livemode=1
 中国教育-1,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000027253/1.m3u8?channel-id=ystenlive&Contentid=1000000002000027253&livemode=1
 中国教育4套,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000005000025333/1.m3u8?channel-id=ystenlive&Contentid=1000000005000025333&livemode=1
-CCTV-1,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000001000021973/1.m3u8?channel-id=ystenlive&Contentid=1000000001000021973&livemode=1
-CCTV-3高清2.5M,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000001000011218/1.m3u8?channel-id=ystenlive&Contentid=1000000001000011218&livemode=1
-CCTV-5高清2.5M,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000001000004794/1.m3u8?channel-id=ystenlive&Contentid=1000000001000004794&livemode=1
-CCTV5+高清2.5M,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000001000020505/1.m3u8?channel-id=ystenlive&Contentid=1000000001000020505&livemode=1
+
+CETV2标清2.5M,http://gslbserv.itv.cmvideo.cn:80/1000000005000266004.m3u8?channel-id=ystenlive&Contentid=1000000005000266004&livemode=1&stbId=lzz123
+
 
 湖南,#genre#
 湖南教育,http://tvgslb.hn.chinamobile.com:8089/000000001000/D-8000k-1080P-hunanjy/index.m3u8?channel-id=ystenlive&Contentid=D-8000k-1080P-hunanjy&livemode=1&AuthInfo=-&IASHttpSessionId=SLB000001
@@ -83,9 +82,15 @@ CCTV5+高清2.5M,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000
 吉林卫视,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000027730/1.m3u8?channel-id=ystenlive&Contentid=1000000002000027730&livemode=1
 云南卫视,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000024694/1.m3u8?channel-id=ystenlive&Contentid=1000000002000024694&livemode=1
 西藏卫视,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000015894/1.m3u8?channel-id=ystenlive&Contentid=1000000002000015894&livemode=1
-旅游卫视,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000023773/1.m3u8?channel-id=ystenlive&Contentid=1000000002000023773&livemode=1
+海南卫视,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000023773/1.m3u8?channel-id=ystenlive&Contentid=1000000002000023773&livemode=1
+大湾区卫视4M,http://gslbserv.itv.cmvideo.cn:80/1000000002000011619/1.m3u8?channel-id=ystenlive&Contentid=1000000002000011619&livemode=1&stbId=lzz123
+厦门卫视,http://gslbserv.itv.cmvideo.cn:80/ystenlive.m3u8?channel-id=1000000005000266006&Contentid=&livemode=1&stbId=lzz123
+农林卫视,http://gslbserv.itv.cmvideo.cn:80/1000000005000266003/1.m3u8?channel-id=ystenlive&Contentid=1000000005000266003&livemode=1&stbId=lzz123
+兵团卫视_4M,http://gslbserv.itv.cmvideo.cn:80/1.m3u8?channel-id=ystenlive&Contentid=1000000005000266005&livemode=1&stbId=lzz123
 
 数字,#genre#
+纯享4K,http://gslbserv.itv.cmvideo.cn:80/1000000004000011651/1.m3u8?channel-id=ystenlive&Contentid=1000000004000011651&livemode=1&stbId=lzz123
+
 北京纪实HD,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000001000028380/1.m3u8?channel-id=ystenlive&Contentid=1000000001000028380&livemode=1
 金鹰卡通,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000016601/1.m3u8?channel-id=ystenlive&Contentid=1000000002000016601&livemode=1
 卡酷少儿,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000002000002413/1.m3u8?channel-id=ystenlive&Contentid=1000000002000002413&livemode=1
@@ -99,6 +104,7 @@ CCTV5+高清2.5M,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000
 睛彩篮球,http://tvgslb.hn.chinamobile.com:8089/000000001000/1000000006000270008/index.m3u8?channel-id=ystenlive&Contentid=1000000006000270008&livemode=1&AuthInfo=-&IASHttpSessionId=SLB000001
 睛彩广场舞,http://tvgslb.hn.chinamobile.com:8089/000000001000/1000000006000270008/index.m3u8?channel-id=ystenlive&Contentid=1000000006000270008&livemode=1&AuthInfo=-&IASHttpSessionId=SLB000001
 睛彩青少,http://tvgslb.hn.chinamobile.com:8089/000000001000/1000000006000270007/index.m3u8?channel-id=ystenlive&Contentid=1000000006000270007&livemode=1&AuthInfo=-&IASHttpSessionId=SLB000001
+中华美食,http://gslbserv.itv.cmvideo.cn:80/1000000005000266015/1.m3u8?channel-id=ystenlive&Contentid=1000000005000266015&livemode=1&stbId=lzz123
 
 NewTV,#genre#
 黑莓电影,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/8785669936177902664/1.m3u8?channel-id=ystenlive&Contentid=8785669936177902664&livemode=1
@@ -120,3 +126,13 @@ NewTV,#genre#
 炫舞未来,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/1000000001000000515/1.m3u8?channel-id=ystenlive&Contentid=1000000001000000515&livemode=1
 哒啵赛事,http://tvgslb.hn.chinamobile.com:8089/000000001000/5320946857686967621/index.m3u8?channel-id=ystenlive&Contentid=5320946857686967621&livemode=1&AuthInfo=-&IASHttpSessionId=SLB000001
 武搏世界,http://gslbserv.taipan.hna.bcs.ottcn.com:8089/000000001000/bokesen/1.m3u8?channel-id=ystenlive&Contentid=bokesen&livemode=1
+
+东北热剧,http://gslbserv.itv.cmvideo.cn:80/1000000005000266013/1.m3u8?channel-id=ystenlive&Contentid=1000000005000266013&livemode=1&stbId=lzz123
+欢乐剧场,http://gslbserv.itv.cmvideo.cn:80/1000000005000266012/1.m3u8?channel-id=ystenlive&Contentid=1000000005000266012&livemode=1&stbId=lzz123
+超级体育8M,http://gslbserv.itv.cmvideo.cn:80/1000000001000009601/1.m3u8?channel-id=ystenlive&Contentid=1000000001000009601&livemode=1&stbId=lzz123
+超级电影8M,http://gslbserv.itv.cmvideo.cn:80/1000000003000012426.m3u8?channel-id=ystenlive&Contentid=1000000003000012426&livemode=1&stbId=lzz123
+超级电视剧（超清）,http://gslbserv.itv.cmvideo.cn:80/1000000006000268003.m3u8?channel-id=ystenlive&Contentid=1000000006000268003&livemode=1&stbId=lzz123
+超级综艺8M,http://gslbserv.itv.cmvideo.cn:80/1000000006000268002/1.m3u8?channel-id=ystenlive&Contentid=1000000006000268002&livemode=1&stbId=lzz123
+金牌综艺,http://gslbserv.itv.cmvideo.cn:80/1.m3u8?channel-id=ystenlive&Contentid=6399725674632152632&livemode=1&stbId=lzz123
+精品萌宠,http://gslbserv.itv.cmvideo.cn:80/1000000006000032328/1.m3u8?channel-id=ystenlive&Contentid=1000000006000032328&livemode=1&stbId=lzz123
+
