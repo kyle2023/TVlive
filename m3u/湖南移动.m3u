@@ -359,110 +359,110 @@ http://tvgslb.hn.chinamobile.com:8089/180000001002/00000001000000000050000000448
 #PLTV 湘潭ip
 
 #EXTINF:-1,tvg-id="黑莓动画" tvg-name="黑莓动画" tvg-logo="https://live.935181.xyz/LOGO/黑莓动画.png" group-title="NewTV系列",黑莓动画
-http://39.134.240.2/PLTV/1/224/3221225646/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225646/index.m3u8
 #EXTINF:-1,tvg-id="黑莓动画" tvg-name="黑莓动画" tvg-logo="https://live.935181.xyz/LOGO/黑莓动画.png" group-title="NewTV系列",黑莓动画
-http://39.134.240.3/PLTV/1/224/3221225646/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225646/index.m3u8
 #EXTINF:-1,tvg-id="黑莓电影" tvg-name="黑莓电影" tvg-logo="https://live.935181.xyz/LOGO/黑莓电影.png" group-title="NewTV系列",黑莓电影
-http://39.134.240.2/PLTV/1/224/3221225628/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225628/index.m3u8
 #EXTINF:-1,tvg-id="黑莓电影" tvg-name="黑莓电影" tvg-logo="https://live.935181.xyz/LOGO/黑莓电影.png" group-title="NewTV系列",黑莓电影
-http://39.134.240.3/PLTV/1/224/3221225628/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225628/index.m3u8
 #EXTINF:-1,tvg-id="动作电影" tvg-name="动作电影" tvg-logo="https://live.935181.xyz/LOGO/动作电影.png" group-title="NewTV系列",动作电影
-http://39.134.240.2/PLTV/1/224/3221225638/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225638/index.m3u8
 #EXTINF:-1,tvg-id="动作电影" tvg-name="动作电影" tvg-logo="https://live.935181.xyz/LOGO/动作电影.png" group-title="NewTV系列",动作电影
-http://39.134.240.3/PLTV/1/224/3221225638/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225638/index.m3u8
 #EXTINF:-1,tvg-id="魅力潇湘" tvg-name="魅力潇湘" tvg-logo="https://live.935181.xyz/LOGO/魅力潇湘.png" group-title="NewTV系列",魅力潇湘
-http://39.134.240.2/PLTV/1/224/3221226168/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221226168/index.m3u8
 #EXTINF:-1,tvg-id="魅力潇湘" tvg-name="魅力潇湘" tvg-logo="https://live.935181.xyz/LOGO/魅力潇湘.png" group-title="NewTV系列",魅力潇湘
-http://39.134.240.3/PLTV/1/224/3221226168/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221226168/index.m3u8
 #EXTINF:-1,tvg-id="海外剧场" tvg-name="海外剧场" tvg-logo="https://live.935181.xyz/LOGO/海外剧场.png" group-title="NewTV系列",海外剧场
-http://39.134.240.2/PLTV/1/224/3221225642/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225642/index.m3u8
 #EXTINF:-1,tvg-id="海外剧场" tvg-name="海外剧场" tvg-logo="https://live.935181.xyz/LOGO/海外剧场.png" group-title="NewTV系列",海外剧场
-http://39.134.240.3/PLTV/1/224/3221225642/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225642/index.m3u8
 #EXTINF:-1,tvg-id="中国功夫" tvg-name="中国功夫" tvg-logo="https://live.935181.xyz/LOGO/中国功夫.png" group-title="NewTV系列",中国功夫
-http://39.134.240.2/PLTV/1/224/3221225503/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225503/index.m3u8
 #EXTINF:-1,tvg-id="中国功夫" tvg-name="中国功夫" tvg-logo="https://live.935181.xyz/LOGO/中国功夫.png" group-title="NewTV系列",中国功夫
-http://39.134.240.3/PLTV/1/224/3221225503/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225503/index.m3u8
 #EXTINF:-1,tvg-id="军事评论" tvg-name="军事评论" tvg-logo="https://live.935181.xyz/LOGO/军事评论.png" group-title="NewTV系列",军事评论
-http://39.134.240.2/PLTV/1/224/3221225652/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225652/index.m3u8
 #EXTINF:-1,tvg-id="军事评论" tvg-name="军事评论" tvg-logo="https://live.935181.xyz/LOGO/军事评论.png" group-title="NewTV系列",军事评论
-http://39.134.240.3/PLTV/1/224/3221225652/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225652/index.m3u8
 #EXTINF:-1,tvg-id="军旅剧场" tvg-name="军旅剧场" tvg-logo="https://live.935181.xyz/LOGO/军旅剧场.png" group-title="NewTV系列",军旅剧场
-http://39.134.240.2/PLTV/1/224/3221225640/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225640/index.m3u8
 #EXTINF:-1,tvg-id="军旅剧场" tvg-name="军旅剧场" tvg-logo="https://live.935181.xyz/LOGO/军旅剧场.png" group-title="NewTV系列",军旅剧场
-http://39.134.240.3/PLTV/1/224/3221225640/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225640/index.m3u8
 #EXTINF:-1,tvg-id="农业致富" tvg-name="农业致富" tvg-logo="https://live.935181.xyz/LOGO/农业致富.png" group-title="NewTV系列",农业致富
-http://39.134.240.2/PLTV/1/224/3221225654/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225654/index.m3u8
 #EXTINF:-1,tvg-id="农业致富" tvg-name="农业致富" tvg-logo="https://live.935181.xyz/LOGO/农业致富.png" group-title="NewTV系列",农业致富
-http://39.134.240.3/PLTV/1/224/3221225654/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225654/index.m3u8
 #EXTINF:-1,tvg-id="古装剧场" tvg-name="古装剧场" tvg-logo="https://live.935181.xyz/LOGO/古装剧场.png" group-title="NewTV系列",古装剧场
-http://39.134.240.2/PLTV/1/224/3221225636/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225636/index.m3u8
 #EXTINF:-1,tvg-id="古装剧场" tvg-name="古装剧场" tvg-logo="https://live.935181.xyz/LOGO/古装剧场.png" group-title="NewTV系列",古装剧场
-http://39.134.240.3/PLTV/1/224/3221225636/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225636/index.m3u8
 #EXTINF:-1,tvg-id="家庭剧场" tvg-name="家庭剧场" tvg-logo="https://live.935181.xyz/LOGO/家庭剧场.png" group-title="NewTV系列",家庭剧场
-http://39.134.240.2/PLTV/1/224/3221225644/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225644/index.m3u8
 #EXTINF:-1,tvg-id="家庭剧场" tvg-name="家庭剧场" tvg-logo="https://live.935181.xyz/LOGO/家庭剧场.png" group-title="NewTV系列",家庭剧场
-http://39.134.240.3/PLTV/1/224/3221225644/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225644/index.m3u8
 #EXTINF:-1,tvg-id="怡伴健康" tvg-name="怡伴健康" tvg-logo="https://live.935181.xyz/LOGO/怡伴健康.png" group-title="NewTV系列",怡伴健康
-http://39.134.240.2/PLTV/1/224/3221225632/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225632/index.m3u8
 #EXTINF:-1,tvg-id="怡伴健康" tvg-name="怡伴健康" tvg-logo="https://live.935181.xyz/LOGO/怡伴健康.png" group-title="NewTV系列",怡伴健康
-http://39.134.240.3/PLTV/1/224/3221225632/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225632/index.m3u8
 #EXTINF:-1,tvg-id="惊悚悬疑" tvg-name="惊悚悬疑" tvg-logo="https://live.935181.xyz/LOGO/惊悚悬疑.png" group-title="NewTV系列",惊悚悬疑
-http://39.134.240.2/PLTV/1/224/3221225656/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225656/index.m3u8
 #EXTINF:-1,tvg-id="惊悚悬疑" tvg-name="惊悚悬疑" tvg-logo="https://live.935181.xyz/LOGO/惊悚悬疑.png" group-title="NewTV系列",惊悚悬疑
-http://39.134.240.3/PLTV/1/224/3221225656/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225656/index.m3u8
 #EXTINF:-1,tvg-id="明星大片" tvg-name="明星大片" tvg-logo="https://live.935181.xyz/LOGO/明星大片.png" group-title="NewTV系列",明星大片
-http://39.134.240.2/PLTV/1/224/3221225650/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225650/index.m3u8
 #EXTINF:-1,tvg-id="明星大片" tvg-name="明星大片" tvg-logo="https://live.935181.xyz/LOGO/明星大片.png" group-title="NewTV系列",明星大片
-http://39.134.240.3/PLTV/1/224/3221225650/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225650/index.m3u8
 #EXTINF:-1,tvg-id="武博世界" tvg-name="武博世界" tvg-logo="https://live.935181.xyz/LOGO/武博世界.png" group-title="NewTV系列",武博世界
-http://39.134.240.2/PLTV/1/224/3221225682/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225682/index.m3u8
 #EXTINF:-1,tvg-id="武博世界" tvg-name="武博世界" tvg-logo="https://live.935181.xyz/LOGO/武博世界.png" group-title="NewTV系列",武博世界
-http://39.134.240.3/PLTV/1/224/3221225682/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225682/index.m3u8
 #EXTINF:-1,tvg-id="潮妈辣婆" tvg-name="潮妈辣婆" tvg-logo="https://live.935181.xyz/LOGO/潮妈辣婆.png" group-title="NewTV系列",潮妈辣婆
-http://39.134.240.2/PLTV/1/224/3221225876/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225876/index.m3u8
 #EXTINF:-1,tvg-id="潮妈辣婆" tvg-name="潮妈辣婆" tvg-logo="https://live.935181.xyz/LOGO/潮妈辣婆.png" group-title="NewTV系列",潮妈辣婆
-http://39.134.240.3/PLTV/1/224/3221225876/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225876/index.m3u8
 #EXTINF:-1,tvg-id="炫舞未来" tvg-name="炫舞未来" tvg-logo="https://live.935181.xyz/LOGO/炫舞未来.png" group-title="NewTV系列",炫舞未来
-http://39.134.240.2/PLTV/1/224/3221226390/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221226390/index.m3u8
 #EXTINF:-1,tvg-id="炫舞未来" tvg-name="炫舞未来" tvg-logo="https://live.935181.xyz/LOGO/炫舞未来.png" group-title="NewTV系列",炫舞未来
-http://39.134.240.3/PLTV/1/224/3221226390/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221226390/index.m3u8
 #EXTINF:-1,tvg-id="热播精选" tvg-name="热播精选" tvg-logo="https://live.935181.xyz/LOGO/热播精选.png" group-title="NewTV系列",热播精选
-http://39.134.240.2/PLTV/1/224/3221225650/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225650/index.m3u8
 #EXTINF:-1,tvg-id="热播精选" tvg-name="热播精选" tvg-logo="https://live.935181.xyz/LOGO/热播精选.png" group-title="NewTV系列",热播精选
-http://39.134.240.3/PLTV/1/224/3221225650/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225650/index.m3u8
 #EXTINF:-1,tvg-id="爱情喜剧" tvg-name="爱情喜剧" tvg-logo="https://live.935181.xyz/LOGO/爱情喜剧.png" group-title="NewTV系列",爱情喜剧
-http://39.134.240.2/PLTV/1/224/3221225634/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225634/index.m3u8
 #EXTINF:-1,tvg-id="爱情喜剧" tvg-name="爱情喜剧" tvg-logo="https://live.935181.xyz/LOGO/爱情喜剧.png" group-title="NewTV系列",爱情喜剧
-http://39.134.240.3/PLTV/1/224/3221225634/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225634/index.m3u8
 #EXTINF:-1,tvg-id="精品体育" tvg-name="精品体育" tvg-logo="https://live.935181.xyz/LOGO/精品体育.png" group-title="NewTV系列",精品体育
-http://39.134.240.2/PLTV/1/224/3221225626/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225626/index.m3u8
 #EXTINF:-1,tvg-id="精品体育" tvg-name="精品体育" tvg-logo="https://live.935181.xyz/LOGO/精品体育.png" group-title="NewTV系列",精品体育
-http://39.134.240.3/PLTV/1/224/3221225626/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225626/index.m3u8
 #EXTINF:-1,tvg-id="精品大剧" tvg-name="精品大剧" tvg-logo="https://live.935181.xyz/LOGO/精品大剧.png" group-title="NewTV系列",精品大剧
-http://39.134.240.2/PLTV/1/224/3221225630/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225630/index.m3u8
 #EXTINF:-1,tvg-id="精品大剧" tvg-name="精品大剧" tvg-logo="https://live.935181.xyz/LOGO/精品大剧.png" group-title="NewTV系列",精品大剧
-http://39.134.240.3/PLTV/1/224/3221225630/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225630/index.m3u8
 #EXTINF:-1,tvg-id="精品纪录" tvg-name="精品纪录" tvg-logo="https://live.935181.xyz/LOGO/精品纪录.png" group-title="NewTV系列",精品纪录
-http://39.134.240.2/PLTV/1/224/3221225648/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225648/index.m3u8
 #EXTINF:-1,tvg-id="精品纪录" tvg-name="精品纪录" tvg-logo="https://live.935181.xyz/LOGO/精品纪录.png" group-title="NewTV系列",精品纪录
-http://39.134.240.3/PLTV/1/224/3221225648/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225648/index.m3u8
 #EXTINF:-1,tvg-id="精品综合" tvg-name="精品综合" tvg-logo="https://live.935181.xyz/LOGO/精品综合.png" group-title="NewTV系列",精品综合
-http://39.134.240.2/PLTV/1/224/3221225642/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225642/index.m3u8
 #EXTINF:-1,tvg-id="精品综合" tvg-name="精品综合" tvg-logo="https://live.935181.xyz/LOGO/精品综合.png" group-title="NewTV系列",精品综合
-http://39.134.240.3/PLTV/1/224/3221225642/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225642/index.m3u8
 #EXTINF:-1,tvg-id="金牌综艺" tvg-name="金牌综艺" tvg-logo="https://live.935181.xyz/LOGO/金牌综艺.png" group-title="NewTV系列",金牌综艺
-http://39.134.240.2/PLTV/1/224/3221225668/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225668/index.m3u8
 #EXTINF:-1,tvg-id="金牌综艺" tvg-name="金牌综艺" tvg-logo="https://live.935181.xyz/LOGO/金牌综艺.png" group-title="NewTV系列",金牌综艺
-http://39.134.240.3/PLTV/1/224/3221225668/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225668/index.m3u8
 #EXTINF:-1,tvg-id="哒啵赛事" tvg-name="哒啵赛事" tvg-logo="https://live.935181.xyz/LOGO/哒啵赛事.png" group-title="NewTV系列",哒啵赛事
-http://39.134.240.3/PLTV/1/224/3221225624/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225624/index.m3u8
 #EXTINF:-1,tvg-id="哒啵赛事" tvg-name="哒啵赛事" tvg-logo="https://live.935181.xyz/LOGO/哒啵赛事.png" group-title="NewTV系列",哒啵赛事
-http://39.134.240.2/PLTV/1/224/3221225624/index.m3u8
+http://39.134.240.5/PLTV/1/224/3221225624/index.m3u8
 
 #EXTINF:-1,tvg-id="中国天气" tvg-name="中国天气" tvg-logo="https://live.935181.xyz/LOGO/中国天气.png" group-title="数字频道",中国天气
-http://39.134.240.3/PLTV/2/224/3221225809/index.m3u8
+http://39.134.240.5/PLTV/2/224/3221225809/index.m3u8
 #EXTINF:-1,tvg-id="中国天气" tvg-name="中国天气" tvg-logo="https://live.935181.xyz/LOGO/中国天气.png" group-title="数字频道",中国天气
-http://39.134.240.2/PLTV/2/224/3221225809/index.m3u8
+http://39.134.240.5/PLTV/2/224/3221225809/index.m3u8
 
 
 
