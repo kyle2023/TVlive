@@ -79,8 +79,25 @@ http://tvgslb.hn.chinamobile.com:8089/180000001002/00000001000000000091000000244
 http://tvgslb.hn.chinamobile.com:8089/180000001002/00000001000000000091000000244800/main.m3u8$hnyd
 #EXTINF:-1 tvg-id="央视台球" tvg-name="央视台球" tvg-logo="https://live.935181.xyz/LOGO/央视台球.png" group-title="央视频道",央视台球
 http://tvgslb.hn.chinamobile.com:8089/180000001002/00000001000000000091000000244803/main.m3u8$hnyd
+#EXTINF:-1 tvg-id="湖南卫视" tvg-name="湖南卫视" tvg-logo="https://live.935181.xyz/LOGO/湖南卫视4K.png" group-title="卫视频道",湖南卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001001/00000001000000000064000000308827/main.m3u8$hnyd
+#EXTINF:-1,tvg-id="江苏卫视" tvg-name="江苏卫视" tvg-logo="https://live.404003.xyz/LOGO/江苏卫视4K.png" group-title="卫视频道",江苏卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001002/32025091110262178928213010539289/main.m3u8
+#EXTINF:-1,tvg-id="浙江卫视" tvg-name="浙江卫视" tvg-logo="https://live.404003.xyz/LOGO/浙江卫视4K.png" group-title="卫视频道",浙江卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001002/32025091110262252695540491433081/main.m3u8
+#EXTINF:-1,tvg-id="东方卫视" tvg-name="东方卫视" tvg-logo="https://live.404003.xyz/LOGO/东方卫视4K.png" group-title="卫视频道",东方卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001002/32025091110262078079170451541005/main.m3u8
+#EXTINF:-1,tvg-id="四川卫视" tvg-name="四川卫视" tvg-logo="https://live.404003.xyz/LOGO/四川卫视4K.png" group-title="卫视频道",四川卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001002/32025091110262063636605981698869/main.m3u8
+#EXTINF:-1,tvg-id="山东卫视" tvg-name="山东卫视" tvg-logo="https://live.404003.xyz/LOGO/山东卫视4K.png" group-title="卫视频道",山东卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001002/32025091110262122088149630612658/main.m3u8
+#EXTINF:-1,tvg-id="北京卫视" tvg-name="北京卫视" tvg-logo="https://live.404003.xyz/LOGO/北京卫视4K.png" group-title="卫视频道",北京卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001002/32025022616374181764583225166397/main.m3u8
+#EXTINF:-1,tvg-id="广东卫视" tvg-name="广东卫视" tvg-logo="https://live.404003.xyz/LOGO/广东卫视4K.png" group-title="卫视频道",广东卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001002/32025061216045554851550640574941/main.m3u8
+#EXTINF:-1,tvg-id="深圳卫视" tvg-name="深圳卫视" tvg-logo="https://live.404003.xyz/LOGO/深圳卫视4K.png" group-title="卫视频道",深圳卫视4K
+http://tvgslb.hn.chinamobile.com:8089/180000001002/32025061216044934209640975946187/main.m3u8
 #EXTINF:-1 tvg-id="湖南卫视" tvg-name="湖南卫视" tvg-logo="https://live.935181.xyz/LOGO/湖南卫视.png" group-title="卫视频道",湖南卫视
-http://tvgslb.hn.chinamobile.com:8089/180000001001/00000001000000000064000000308827/main.m3u8$hnyd-20M
 http://tvgslb.hn.chinamobile.com:8089/180000001002/00000001000000000010000000040382/main.m3u8$hnyd
 #EXTINF:-1 tvg-id="江苏卫视" tvg-name="江苏卫视" tvg-logo="https://live.935181.xyz/LOGO/江苏卫视.png" group-title="卫视频道",江苏卫视
 http://tvgslb.hn.chinamobile.com:8089/180000001002/00000001000000000007000000001244/main.m3u8$hnyd
