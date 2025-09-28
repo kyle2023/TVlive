@@ -87,6 +87,25 @@ rtsp://118.212.169.134/PLTV/88888888/224/3221227216/1000010000000006000000000068
 rtsp://118.212.169.134/PLTV/88888888/224/3221227371/548591709.smil
 #EXTINF:-1,tvg-id="CCTV5+" tvg-name="CCTV5+" tvg-logo="https://live.404003.xyz/LOGO/CCTV5+.png" group-title="央视",CCTV5+
 rtsp://118.212.169.134/PLTV/88888888/224/3221227270/10000100000000060000000001635911_0.smil
+#EXTINF:-1,tvg-id="湖南卫视" tvg-name="湖南卫视" tvg-logo="https://live.404003.xyz/LOGO/湖南卫视4K.png" group-title="卫视",湖南卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227393/796388549.smil
+#EXTINF:-1,tvg-id="江苏卫视" tvg-name="江苏卫视" tvg-logo="https://live.404003.xyz/LOGO/江苏卫视4K.png" group-title="卫视",江苏卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227398/796414327.smil
+#EXTINF:-1,tvg-id="浙江卫视" tvg-name="浙江卫视" tvg-logo="https://live.404003.xyz/LOGO/浙江卫视4K.png" group-title="卫视",浙江卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227400/796432153.smil
+#EXTINF:-1,tvg-id="东方卫视" tvg-name="东方卫视" tvg-logo="https://live.404003.xyz/LOGO/东方卫视4K.png" group-title="卫视",东方卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227402/796552555.smil
+#EXTINF:-1,tvg-id="四川卫视" tvg-name="四川卫视" tvg-logo="https://live.404003.xyz/LOGO/四川卫视4K.png" group-title="卫视",四川卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227404/796574813.smil
+#EXTINF:-1,tvg-id="山东卫视" tvg-name="山东卫视" tvg-logo="https://live.404003.xyz/LOGO/山东卫视4K.png" group-title="卫视",山东卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227406/796588506.smil
+#EXTINF:-1,tvg-id="北京卫视" tvg-name="北京卫视" tvg-logo="https://live.404003.xyz/LOGO/北京卫视4K.png" group-title="卫视",北京卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227384/712205226.smil
+#EXTINF:-1,tvg-id="广东卫视" tvg-name="广东卫视" tvg-logo="https://live.404003.xyz/LOGO/广东卫视4K.png" group-title="卫视",广东卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227388/757998294.smil
+#EXTINF:-1,tvg-id="深圳卫视" tvg-name="深圳卫视" tvg-logo="https://live.404003.xyz/LOGO/深圳卫视4K.png" group-title="卫视",深圳卫视4K
+rtsp://118.212.169.134/PLTV/88888888/224/3221227387/758004386.smil
+
 #EXTINF:-1,tvg-id="湖南卫视" tvg-name="湖南卫视" tvg-logo="https://live.404003.xyz/LOGO/湖南卫视.png" group-title="卫视",湖南卫视
 rtsp://118.212.169.134/PLTV/88888888/224/3221227037/10000100000000060000000000570888_0.smil
 #EXTINF:-1,tvg-id="浙江卫视" tvg-name="浙江卫视" tvg-logo="https://live.404003.xyz/LOGO/浙江卫视.png" group-title="卫视",浙江卫视
@@ -97,8 +116,6 @@ rtsp://118.212.169.134/PLTV/88888888/224/3221227230/1000010000000006000000000068
 rtsp://118.212.169.134/PLTV/88888888/224/3221227235/10000100000000060000000000680027_0.smil
 #EXTINF:-1,tvg-id="北京卫视" tvg-name="北京卫视" tvg-logo="https://live.404003.xyz/LOGO/北京卫视.png" group-title="卫视",北京卫视
 rtsp://118.212.169.134/PLTV/88888888/224/3221227227/10000100000000060000000000680075_0.smil
-#EXTINF:-1,tvg-id="北京卫视" tvg-name="北京卫视" tvg-logo="https://live.404003.xyz/LOGO/北京卫视.png" group-title="卫视",北京卫视4K
-rtsp://118.212.169.134/PLTV/88888888/224/3221227384/712205226.smil
 #EXTINF:-1,tvg-id="江西卫视" tvg-name="江西卫视" tvg-logo="https://live.404003.xyz/LOGO/江西卫视.png" group-title="卫视",江西卫视
 rtsp://118.212.169.134/PLTV/88888888/224/3221226961/10000100000000060000000000543478_0.smil
 #EXTINF:-1,tvg-id="安徽卫视" tvg-name="安徽卫视" tvg-logo="https://live.404003.xyz/LOGO/安徽卫视.png" group-title="卫视",安徽卫视
