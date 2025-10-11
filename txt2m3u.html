@@ -25,8 +25,8 @@ label{display:block;margin-bottom:6px;font-weight:bold;}
 <label for="logoBase">基础 Logo 地址：</label>
 <input type="text" id="logoBase" value="https://live.404003.xyz/LOGO/" placeholder="输入基础 Logo 地址...">
 
-<label><input type="checkbox" id="sanitizeDisplay"> 对频道名进行净化（EXTINF显示名）</label>
-
+<label><input type="checkbox" id="sanitizeDisplay"> TXT转M3U时，对频道名进行净化（EXTINF显示名）</label>
+<label><input type="checkbox" id="useTvgName"> M3U8转TXT时，优先使用 tvg-name / tvg-id作为频道名称（默认使用 EXTINF 显示名）</label>
 
 <textarea id="input" placeholder="在此粘贴 TXT 或 M3U 列表..."></textarea>
 <div id="button-group">
@@ -39,13 +39,13 @@ label{display:block;margin-bottom:6px;font-weight:bold;}
 </div>
 
 <script>
-// 分组规则示例 group.json
+// ===== 分组规则 =====
 const groupRules = [
     // ===== 优先级最高：央视与卫视 =====
-    {keywords: ['CCTV', 'cctv', '央视','cgtn','CGTN','CETV','cetv','风云音乐','风云足球','风云剧场','高尔夫','怀旧剧场','文化精品','电视指南','世界地理','兵器科技','女性时尚','第一剧场','老故事'], group: '央视'},
-    {keywords: ['卫视','凤凰'], group: '卫视'}, // 优先匹配“卫视”，防止湖南卫视被分到“湖南”
+    {keywords: ['CCTV','cctv','央视','cgtn','CGTN','CETV','cetv','风云音乐','风云足球','风云剧场','高尔夫','怀旧剧场','文化精品','电视指南','世界地理','兵器科技','女性时尚','第一剧场','老故事','中学生','发现之旅'], group: '央视'},
+    {keywords: ['卫视','凤凰'], group: '卫视'}, // 防止“湖南卫视”误分湖南
 
-    // ===== 各省市频道分组（卫视优先匹配）=====
+    // ===== 各省市 =====
     {keywords: ['北京'], group: '北京'},
     {keywords: ['天津'], group: '天津'},
     {keywords: ['上海'], group: '上海'},
@@ -80,27 +80,26 @@ const groupRules = [
     {keywords: ['香港'], group: '香港'},
     {keywords: ['澳门'], group: '澳门'},
     {keywords: ['台湾'], group: '台湾'},
-	
-    // ===== 各平台品牌 =====
-	{keywords: ['CHC','影迷电影','家庭影院','中国天气','中国交通','先锋乒羽','茶','快乐垂钓','优漫','金鹰','卡酷','嘉佳','炫动','教育','北京纪实','科教','梨园','文物宝库','武术世界','4K'], group: '数字'},	
-    {keywords: ['黑莓','哒啵','精品大剧','古装剧场','军旅剧场','家庭剧场','热播精选','爱情喜剧','动作电影','惊悚悬疑','金牌综艺','精品体育','精品萌宠','中国功夫','怡伴健康','潮妈辣婆','精品纪录','超级电影','超级电视剧','军事评论','炫舞未来','武博世界','魅力潇湘','NewTV','newtv','NEWTV'], group: 'NewTV'},
+
+    // ===== 品牌类 =====
+    {keywords: ['黑莓','哒啵','精品大剧','古装剧场','军旅剧场','家庭剧场','热播精选','爱情喜剧','动作电影','惊悚悬疑','金牌综艺','精品体育','精品萌宠','中国功夫','怡伴健康','潮妈辣婆','精品纪录','超级电影','超级体育','超级综艺','欢乐剧场','超级电视剧','军事评论','炫舞未来','武博世界','魅力潇湘','NewTV','newtv','NEWTV'], group: 'NewTV'},
     {keywords: ['SiTV','SITV'], group: 'SiTV'},
     {keywords: ['看天下精选','百变课堂','健康养生','华语影院','电竞天堂','青春动漫','宝宝动画','星光院线','星光影院','谍战剧场','全球大片','热门剧场','戏曲精选','热门综艺','百视通','bestv'], group: 'BesTV'},
     {keywords: ['咪咕','睛彩','咪视通','至臻视界'], group: '咪咕'},
     {keywords: ['iHOT','IHOT','ihot'], group: 'iHOT'},
     {keywords: ['欢笑剧场','动漫秀场','劲爆体育','金色学堂','游戏风云','生活时尚','乐游','都市剧场','东方财经','新视觉','法制天地','纪实人文','法治天地'], group: 'SiTV'},
-    {keywords: ['广播','之声','调频','FM'], group: '广播'},
     {regex: /^爱.{2}/, group: 'iHOT'}, 
-	
-    // ===== 特殊类与兜底 =====
+    {keywords: ['CHC','影迷电影','家庭影院','求索','中国天气','中国交通','先锋乒羽','茶','快乐垂钓','优漫','金鹰','卡酷','嘉佳','炫动','教育','北京纪实','科教','梨园','国学','篮球','汽摩','环球奇观','文物宝库','武术世界','天下','收藏','书画','新动漫','围棋','弈坛春秋','4K'], group: '数字'},	
+
+    // ===== 兜底分类 =====
     {keywords: ['教育','学习','课堂'], group: '教育'},
     {keywords: ['影视','影院','电影','剧场'], group: '影视'},
     {keywords: ['综艺','娱乐'], group: '综艺'},
     {keywords: ['体育'], group: '体育'},
     {keywords: ['纪录'], group: '纪录片'},
+    {keywords: ['广播','之声','调频','FM'], group: '广播'},
     {keywords: ['测试','回看','备用','广告'], group: '测试'},
 ];
-
 
 function matchGroup(channelName){
     for(let rule of groupRules){
@@ -114,31 +113,44 @@ function matchGroup(channelName){
     return '其他';
 }
 
-// 净化函数
-function sanitizeName(name){
+// ===== 频道名净化函数 =====
+function sanitizeName(name) {
+    // CCTV 系列处理
     let cctvMatch = name.match(/^CCTV(\d+)([+K]?)/i);
-    if(cctvMatch){
+    if (cctvMatch) {
         let num = cctvMatch[1];
-        let suffix = cctvMatch[2] || '';
-        if(num === '5' && suffix === '+') return 'CCTV5+';
-        if((num === '4' || num === '8') && suffix.toUpperCase() === 'K') return 'CCTV'+num+'K';
-        return 'CCTV'+num;
+        let suffix = cctvMatch[2] || ''; // + 或 K
+        if (num === '5' && suffix === '+') return 'CCTV5+';
+        if ((num === '4' || num === '8') && suffix.toUpperCase() === 'K') return 'CCTV' + num + 'K';
+        return 'CCTV' + num;
     }
 
     let clean = name;
+
+    // 去掉“超清、高清、标清、HD、SD”等及其后内容
     let hdIndex = clean.search(/超清|超高清|极清|高清|标清|HD|SD/i);
-    if(hdIndex !== -1) clean = clean.substring(0, hdIndex);
-    clean = clean.replace(/[-_]/g, '');
-    clean = clean.replace(/\[.*?\]|\(.*?\)|\{.*?\}/g, '');
-    clean = clean.trim();
+    if (hdIndex !== -1) {
+        clean = clean.substring(0, hdIndex);
+    }
+
+    // ✅ 去掉所有中英文括号及内容，包括（）、【】、[]、()、｛｝等
+    clean = clean.replace(/[\[\(（【｛<＜].*?[\]\)）】｝>＞]/gu, '');
+
+    // ✅ 再次清除孤立括号（防止匹配不完整残留）
+    clean = clean.replace(/[（【｛\[<＜>\]）】｝＞]/gu, '');
+
+    // ✅ 去掉短横线、下划线、空格
+    clean = clean.replace(/[-_]/g, '').trim();
+
     return clean;
 }
 
-function txtToM3u(){
-    let epg=document.getElementById('epg').value.trim() || 'https://epg.v1.mk/fy.xml';
-    let logoBase=document.getElementById('logoBase').value.trim() || 'https://live.404003.xyz/LOGO/';
-    let sanitizeDisplay=document.getElementById('sanitizeDisplay').checked;
 
+// ===== TXT → M3U =====
+function txtToM3u(){
+    let epg=document.getElementById('epg').value.trim()||'https://epg.v1.mk/fy.xml';
+    let logoBase=document.getElementById('logoBase').value.trim()||'https://live.404003.xyz/LOGO/';
+    let sanitizeDisplay=document.getElementById('sanitizeDisplay').checked;
     let input=document.getElementById('input').value.trim();
     if(!input){alert("请输入 TXT 内容！");return;}
 
@@ -147,51 +159,54 @@ function txtToM3u(){
     let currentGroup='';
     for(let line of lines){
         line=line.trim();
-        if(!line) continue;
+        if(!line)continue;
         if(line.includes(',#genre#')){
             currentGroup=line.split(',')[0];
             continue;
         }
         let parts=line.split(',');
-        if(parts.length<2) continue;
+        if(parts.length<2)continue;
         let name=parts[0].trim();
         let url=parts[1].trim();
         let cleanName=sanitizeName(name);
-        let group=currentGroup || matchGroup(name);
+        let group=currentGroup||matchGroup(name);
         let logo=logoBase+cleanName+'.png';
-        let displayName = sanitizeDisplay ? cleanName : name;
-
+        let displayName=sanitizeDisplay?cleanName:name;
         result+='#EXTINF:-1 tvg-id="'+cleanName+'" tvg-name="'+cleanName+'" tvg-logo="'+logo+'" group-title="'+group+'",'+displayName+'\n'+url+'\n';
     }
     document.getElementById('output').value=result.trim();
 }
 
+// ===== M3U → TXT =====
 function m3uToTxt(){
     let input=document.getElementById('input').value.trim();
     if(!input){alert("请输入 M3U 内容！");return;}
+    let useTvgName=document.getElementById('useTvgName').checked;
+
     let lines=input.split(/\r?\n/);
     let groups={};
-
-    // 收集所有分组频道
     for(let i=0;i<lines.length;i++){
         let line=lines[i].trim();
-        if(!line) continue;
+        if(!line)continue;
         if(line.startsWith('#EXTINF')){
             let groupMatch=line.match(/group-title="([^"]*)"/);
-            let nameMatch=line.match(/tvg-name="([^"]*)"/) || line.match(/tvg-id="([^"]*)"/);
-            let name=nameMatch?nameMatch[1]:'未知频道';
+            let name='';
+            if(useTvgName){
+                let nameMatch=line.match(/tvg-name="([^"]*)"/)||line.match(/tvg-id="([^"]*)"/);
+                name=nameMatch?nameMatch[1]:'未知频道';
+            }else{
+                let extinfName=line.split(',').slice(1).join(',').trim();
+                name=extinfName||'未知频道';
+            }
             let group=groupMatch?groupMatch[1]:matchGroup(name);
-            if(!groups[group]) groups[group]=[];
+            if(!groups[group])groups[group]=[];
             let url='';
-            if(i+1<lines.length && !lines[i+1].startsWith('#')){
-                url=lines[i+1].trim();
-                i++;
+            if(i+1<lines.length&&!lines[i+1].startsWith('#')){
+                url=lines[i+1].trim();i++;
             }
             groups[group].push(name+','+url);
         }
     }
-
-    // 输出合并后的分组
     let result='';
     for(let group in groups){
         result+=group+',#genre#\n'+groups[group].join('\n')+'\n';
@@ -207,7 +222,7 @@ function clearAll(){
 function copyOutput(){
     let output=document.getElementById('output');
     output.select();
-    output.setSelectionRange(0, 99999);
+    output.setSelectionRange(0,99999);
     document.execCommand('copy');
     alert('已复制到剪贴板！');
 }
