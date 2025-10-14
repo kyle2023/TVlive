@@ -93,7 +93,7 @@ http://39.134.32.167:6610/270000001128/9900000043/index.m3u8?channel-id=newtv&Co
 http://39.134.32.167:6610/270000001128/9900000044/index.m3u8?channel-id=newtv&Contentid=9900000044&livemode=1
 #EXTINF:-1 tvg-id="新疆卫视" tvg-name="新疆卫视" tvg-logo="https://live.404003.xyz/LOGO/新疆卫视.png" group-title="卫视",新疆卫视标清
 http://39.134.32.167:6610/270000001128/9900000045/index.m3u8?channel-id=newtv&Contentid=9900000045&livemode=1
-#EXTINF:-1 tvg-id="中国教育" tvg-name="中国教育" tvg-logo="https://live.404003.xyz/LOGO/中国教育.png" group-title="数字",中国教育标清
+#EXTINF:-1 tvg-id="中国教育" tvg-name="中国教育" tvg-logo="https://live.404003.xyz/LOGO/中国教育.png" group-title="央视",中国教育标清
 http://39.134.32.167:6610/270000001128/9900000046/index.m3u8?channel-id=newtv&Contentid=9900000046&livemode=1
 #EXTINF:-1 tvg-id="宁夏卫视" tvg-name="宁夏卫视" tvg-logo="https://live.404003.xyz/LOGO/宁夏卫视.png" group-title="卫视",宁夏卫视标清
 http://39.134.32.167:6610/270000001128/9900000047/index.m3u8?channel-id=newtv&Contentid=9900000047&livemode=1
