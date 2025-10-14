@@ -1,7 +1,7 @@
 #EXTM3U x-tvg-url="https://diyp0731.112114.xyz/pp.xml.gz" 
 
 #河南电信内网源，仅限河南电信网络使用。
-#EXT-X-SUB-URL https://live.404003.xyz/m3u/hndx.m3u
+#EXT-X-SUB-URL https://live.404003.xyz/m3u/hendx.m3u
 
 #EXTINF:-1 tvg-id="CCTV1" tvg-name="CCTV1" tvg-logo="https://live.fanmingming.com/tv/CCTV1.png" group-title="央视",CCTV1
 http://222.85.69.6/PLTV/88888888/224/3221227279/index.m3u8

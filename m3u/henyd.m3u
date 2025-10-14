@@ -1,7 +1,7 @@
 #EXTM3U x-tvg-url="https://diyp0731.112114.xyz/pp.xml.gz" 
 
 #河南移动内网源，仅限河南移动网络使用。
-#EXT-X-SUB-URL https://live.404003.xyz/m3u/hnyd.m3u
+#EXT-X-SUB-URL https://live.404003.xyz/m3u/henyd.m3u
 
 #EXTINF:-1 tvg-id="CCTV1" tvg-name="CCTV1" group-title="央视",CCTV1
 http://iptv.cdn.ha.chinamobile.com/PLTV/88888888/224/3221226917/1.m3u8?fmt=ts2hls
