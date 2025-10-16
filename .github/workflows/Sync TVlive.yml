@@ -1,0 +1,63 @@
+name: 同步TVlive仓库更新
+
+on:
+  schedule:
+    - cron: '0 */8 * * *'  # 每8小时触发一次
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # 使用默认token确保推送权限
+          fetch-depth: 0  # 获取完整历史记录
+
+      - name: 设置Git配置
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+
+      - name: 添加源仓库远程并同步
+        run: |
+          # 源仓库地址（公开仓库，直接使用HTTPS）
+          SOURCE_REPO="https://github.com/wind005/TVlive.git"
+          
+          # 添加源仓库远程
+          git remote add upstream $SOURCE_REPO || true
+          
+          # 获取源仓库main分支最新变化
+          git fetch upstream main
+          
+          # 检查是否有新commit
+          if [ "$(git rev-list --count HEAD...upstream/main 2>/dev/null || echo 0)" -gt 0 ]; then
+            echo "✅ 检测到TVlive仓库有更新，开始同步..."
+            
+            # 切换到main分支
+            git checkout main
+            
+            # 合并上游变化（允许无关历史）
+            git merge upstream/main --allow-unrelated-histories -m "同步wind005/TVlive最新更新"
+            
+            # 推送更新到目标仓库
+            git push origin main
+            
+            echo "🎉 同步完成！已更新到最新版本。"
+          else
+            echo "ℹ️ TVlive仓库暂无更新。"
+          fi
+
+      - name: 清理远程源
+        if: always()
+        run: |
+          git remote remove upstream || true
+          echo "清理完成。"
+
+      - name: 检查同步状态
+        if: always()
+        run: |
+          echo "=== 同步任务状态报告 ==="
+          echo "源仓库: https://github.com/wind005/TVlive"
+          echo "下次检查时间: 约8小时后"
