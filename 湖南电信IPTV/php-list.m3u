@@ -1,4 +1,4 @@
-#EXTM3U x-tvg-url="https://epg.v1.mk/fy.xml" catchup="append" catchup-source="playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}"
+#EXTM3U x-tvg-url="https://diyp0731.112114.xyz/pp.xml.gz" catchup="append" catchup-source="&playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}"
 
 #EXTINF:-1 tvg-id="湖南卫视" tvg-name="湖南卫视" tvg-logo="https://live.404003.xyz/LOGO/湖南卫视4K.png" group-title="4K频道",湖南卫视4K
 http://192.168.0.1/iptv/hndx.php?id=201500000219
