@@ -172,7 +172,7 @@ CGTN俄语[1920*1080],http://61.150.160.70:6610/000000002000/201500000408/index.
 四川卫视[1920*1080],http://61.150.160.70:6610/000000002000/201500000458/index.m3u8?zte_offset=30&ispcode=2&starttime=
 甘肃卫视[1920*1080],http://61.150.160.70:6610/000000002000/201500000461/index.m3u8?zte_offset=30&ispcode=2&starttime=
 河南卫视[1920*1080],http://61.150.160.70:6610/000000002000/201500000476/index.m3u8?zte_offset=30&ispcode=2&starttime=
-吉林卫视[1920*1080],http://61.150.160.70:6610/000000002000/201500000475/index.m3u8?zte_offset=30&ispcode=2&starttime=
+3卫视[1920*1080],http://61.150.160.70:6610/000000002000/201500000475/index.m3u8?zte_offset=30&ispcode=2&starttime=
 海南卫视[1920*1080],http://61.150.160.70:6610/000000002000/201500000477/index.m3u8?zte_offset=30&ispcode=2&starttime=
 广西卫视[1920*1080],http://61.150.160.70:6610/000000002000/201500000512/index.m3u8?zte_offset=30&ispcode=2&starttime=
 云南卫视[1920*1080],http://61.150.160.70:6610/000000002000/201500000513/index.m3u8?zte_offset=30&ispcode=2&starttime=
@@ -211,7 +211,7 @@ CHC动作电影[1920*1080],http://61.150.160.70:6610/000000002000/201500000386/i
 武术世界[1920*1080],http://61.150.160.70:6610/000000002000/201500000480/index.m3u8?zte_offset=30&ispcode=2&starttime=
 文物宝库[1920*1080],http://61.150.160.70:6610/000000002000/201500000479/index.m3u8?zte_offset=30&ispcode=2&starttime=
 国学[1024*576],http://61.150.160.70:6610/000000002000/201500000486/index.m3u8?zte_offset=30&ispcode=2&starttime=
-天下收藏[785*576],http://61.150.160.70:6610/000000002000/201500000507/index.m3u8?zte_offset=30&ispcode=2&starttime=
+收藏天下[785*576],http://61.150.160.70:6610/000000002000/201500000507/index.m3u8?zte_offset=30&ispcode=2&starttime=
 卡酷少儿[1920*1080],http://61.150.160.70:6610/000000002000/201500000515/index.m3u8?zte_offset=30&ispcode=2&starttime=
 生态环境[1024*576],http://61.150.160.70:6610/000000002000/201500000534/index.m3u8?zte_offset=30&ispcode=2&starttime=
 环球奇观[1024*576],http://61.150.160.70:6610/000000002000/201500000560/index.m3u8?zte_offset=30&ispcode=2&starttime=
@@ -227,7 +227,7 @@ SiTV,#genre#
 动漫秀场[1920*1080],http://61.150.160.70:6610/000000002000/201500000581/index.m3u8?zte_offset=30&ispcode=2&starttime=
 游戏风云[1920*1080],http://61.150.160.70:6610/000000002000/201500000582/index.m3u8?zte_offset=30&ispcode=2&starttime=
 都市剧场[1920*1080],http://61.150.160.70:6610/000000002000/201500000585/index.m3u8?zte_offset=30&ispcode=2&starttime=
-都市剧场[1920*1080],http://61.150.160.70:6610/000000002000/201500000586/index.m3u8?zte_offset=30&ispcode=2&starttime=
+金色学堂[1920*1080],http://61.150.160.70:6610/000000002000/201500000586/index.m3u8?zte_offset=30&ispcode=2&starttime=
 欢笑剧场4K[3840*2160],http://61.150.160.70:6610/000000002000/201500000625/index.m3u8?zte_offset=30&ispcode=2&starttime=
 
 
