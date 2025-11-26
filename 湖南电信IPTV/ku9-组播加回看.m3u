@@ -45,9 +45,9 @@ http://192.168.0.1:4022/rtp/239.76.253.152:9000?fcc=124.232.149.47:15970
 http://192.168.0.1:4022/rtp/239.76.253.153:9000?fcc=124.232.149.47:15970
 #EXTINF:-1 tvg-id="CCTV4" tvg-name="CCTV4" tvg-logo="https://live.404003.xyz/LOGO/CCTV4.png" group-title="央视频道" catchup="default" catchup-source="http://124.232.231.172:8089/000000002000/201500000204/index.m3u8?starttime=${(b)yyyyMMdd|UTC}T${(b)HHmmss|UTC}&endtime=${(e)yyyyMMdd|UTC}T${(e)HHmmss|UTC}",CCTV4-中文国际
 http://192.168.0.1:4022/rtp/239.76.253.154:9000?fcc=124.232.149.47:15970
-#EXTINF:-1 tvg-id="CCTV4" tvg-name="CCTV4" tvg-logo="https://live.404003.xyz/LOGO/CCTV4.png" group-title="央视频道" catchup="default" catchup-source="http://124.232.231.172:8089/000000002000/201500000495/index.m3u8?starttime=${(b)yyyyMMdd|UTC}T${(b)HHmmss|UTC}&endtime=${(e)yyyyMMdd|UTC}T${(e)HHmmss|UTC}",CCTV4-中文国际欧洲
+#EXTINF:-1 tvg-id="CCTV4欧洲" tvg-name="CCTV4欧洲" tvg-logo="https://live.404003.xyz/LOGO/CCTV4欧洲.png" group-title="央视频道" catchup="default" catchup-source="http://124.232.231.172:8089/000000002000/201500000495/index.m3u8?starttime=${(b)yyyyMMdd|UTC}T${(b)HHmmss|UTC}&endtime=${(e)yyyyMMdd|UTC}T${(e)HHmmss|UTC}",CCTV4-中文国际欧洲
 http://192.168.0.1:4022/rtp/239.76.253.95:9000?fcc=124.232.149.47:15970
-#EXTINF:-1 tvg-id="CCTV4" tvg-name="CCTV4" tvg-logo="https://live.404003.xyz/LOGO/CCTV4.png" group-title="央视频道" catchup="default" catchup-source="http://124.232.231.172:8089/000000002000/201500000496/index.m3u8?starttime=${(b)yyyyMMdd|UTC}T${(b)HHmmss|UTC}&endtime=${(e)yyyyMMdd|UTC}T${(e)HHmmss|UTC}",CCTV4-中文国际美洲
+#EXTINF:-1 tvg-id="CCTV4美洲" tvg-name="CCTV4美洲" tvg-logo="https://live.404003.xyz/LOGO/CCTV4美洲.png" group-title="央视频道" catchup="default" catchup-source="http://124.232.231.172:8089/000000002000/201500000496/index.m3u8?starttime=${(b)yyyyMMdd|UTC}T${(b)HHmmss|UTC}&endtime=${(e)yyyyMMdd|UTC}T${(e)HHmmss|UTC}",CCTV4-中文国际美洲
 http://192.168.0.1:4022/rtp/239.76.253.96:9000?fcc=124.232.149.47:15970
 #EXTINF:-1 tvg-id="CCTV5" tvg-name="CCTV5" tvg-logo="https://live.404003.xyz/LOGO/CCTV5.png" group-title="央视频道" catchup="default" catchup-source="http://124.232.231.172:8089/000000002000/201500000548/index.m3u8?starttime=${(b)yyyyMMdd|UTC}T${(b)HHmmss|UTC}&endtime=${(e)yyyyMMdd|UTC}T${(e)HHmmss|UTC}",CCTV5-体育
 http://192.168.0.1:4022/rtp/239.76.254.214:9000?fcc=124.232.149.47:15970

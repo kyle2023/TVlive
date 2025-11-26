@@ -154,9 +154,9 @@ http://192.168.0.1/iptv/hndx.php?id=201500000129
 http://192.168.0.1/iptv/hndx.php?id=201500000124
 #EXTINF:-1 tvg-id="CCTV4" tvg-name="CCTV4" tvg-logo="https://live.404003.xyz/LOGO/CCTV4.png" group-title="央视",CCTV4
 http://192.168.0.1/iptv/hndx.php?id=201500000204
-#EXTINF:-1 tvg-id="CCTV4" tvg-name="CCTV4" tvg-logo="https://live.404003.xyz/LOGO/CCTV4.png" group-title="央视",CCTV4
+#EXTINF:-1 tvg-id="CCTV4欧洲" tvg-name="CCTV4欧洲" tvg-logo="https://live.404003.xyz/LOGO/CCTV4欧洲.png" group-title="央视",CCTV4欧洲
 http://192.168.0.1/iptv/hndx.php?id=201500000495
-#EXTINF:-1 tvg-id="CCTV4" tvg-name="CCTV4" tvg-logo="https://live.404003.xyz/LOGO/CCTV4.png" group-title="央视",CCTV4
+#EXTINF:-1 tvg-id="CCTV4美洲" tvg-name="CCTV4美洲" tvg-logo="https://live.404003.xyz/LOGO/CCTV4美洲.png" group-title="央视",CCTV4美洲
 http://192.168.0.1/iptv/hndx.php?id=201500000496
 #EXTINF:-1 tvg-id="CCTV5+" tvg-name="CCTV5+" tvg-logo="https://live.404003.xyz/LOGO/CCTV5+.png" group-title="央视",CCTV5+
 http://192.168.0.1/iptv/hndx.php?id=201500000062
