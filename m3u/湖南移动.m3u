@@ -1812,6 +1812,18 @@ http://tvgslb.hn.chinamobile.com:8089/000000001000//3000000010000015560/1.m3u8?c
 http://tvgslb.hn.chinamobile.com:8089/000000001000//3000000001000008379/1.m3u8?channel-id=FifastbLive&Contentid=3000000001000008379&livemode=1&stbId=lzz123$Fifa 8M FHD
 #EXTINF:-1,tvg-id="咪咕足球" tvg-name="咪咕足球" tvg-logo="https://live.935181.xyz/LOGO/咪咕视频.png" group-title="咪咕频道",咪咕足球赛事3
 http://tvgslb.hn.chinamobile.com:8089/000000001000//3000000010000023434/1.m3u8?channel-id=FifastbLive&Contentid=3000000010000023434&livemode=1&stbId=lzz123$Fifa 5M FHD
+#EXTINF:-1 tvg-id="湖南都市" tvg-name="湖南都市" tvg-logo="https://live.404003.xyz/LOGO/湖南都市.png" group-title="湖南频道",湖南都市
+http://tvgslb.hn.chinamobile.com:8089/000000001000/HD-8000k-1080P-hunandushi/index.m3u8?channel-id=ystenlive&Contentid=HD-8000k-1080P-hunandushi&livemode=1&stbId=lzz123$ysten
+#EXTINF:-1 tvg-id="湖南经视" tvg-name="湖南经视" tvg-logo="https://live.404003.xyz/LOGO/湖南经视.png" group-title="湖南频道",湖南经视
+http://tvgslb.hn.chinamobile.com:8089/000000001000/HD-8000k-1080P-hunanjingshi/index.m3u8?channel-id=ystenlive&Contentid=HD-8000k-1080P-hunanjingshi&livemode=1&stbId=lzz123$ysten
+#EXTINF:-1 tvg-id="湖南电影" tvg-name="湖南电影" tvg-logo="https://live.404003.xyz/LOGO/湖南电影.png" group-title="湖南频道",湖南电影
+http://tvgslb.hn.chinamobile.com:8089/000000001000/HD-8000k-1080P-xiaoxiangdy/index.m3u8?channel-id=ystenlive&Contentid=HD-8000k-1080P-xiaoxiangdy&livemode=1&stbId=lzz123$ysten
+#EXTINF:-1 tvg-id="湖南电视剧" tvg-name="湖南电视剧" tvg-logo="https://live.404003.xyz/LOGO/湖南电视剧.png" group-title="湖南频道",湖南电视剧
+http://tvgslb.hn.chinamobile.com:8089/000000001000/HD-8000k-1080P-xiaoxiangdsj/index.m3u8?channel-id=ystenlive&Contentid=HD-8000k-1080P-xiaoxiangdsj&livemode=1&stbId=lzz123$ysten
+#EXTINF:-1 tvg-id="湖南爱晚" tvg-name="湖南爱晚" tvg-logo="https://live.404003.xyz/LOGO/湖南爱晚.png" group-title="湖南频道",湖南爱晚
+http://tvgslb.hn.chinamobile.com:8089/000000001000/HD-8000k-1080P-hunangg/index.m3u8?channel-id=ystenlive&Contentid=HD-8000k-1080P-hunangg&livemode=1&stbId=lzz123$ysten
+#EXTINF:-1 tvg-id="湖南教育" tvg-name="湖南教育" tvg-logo="https://live.404003.xyz/LOGO/湖南教育.png" group-title="湖南频道",湖南教育
+http://tvgslb.hn.chinamobile.com:8089/000000001000/D-8000k-1080P-hunanjy/index.m3u8?channel-id=ystenlive&Contentid=D-8000k-1080P-hunanjy&livemode=1&stbId=lzz123$ysten
 #EXTINF:-1,tvg-id="金鹰卡通" tvg-name="金鹰卡通" tvg-logo="https://live.935181.xyz/LOGO/金鹰卡通.png" group-title="湖南频道",金鹰卡通
 http://tvgslb.hn.chinamobile.com:8089/000000001000//5000000006000040024/1.m3u8?channel-id=bestzb&Contentid=5000000006000040024&livemode=1&stbId=lzz123$bestzb 4M FHD
 #EXTINF:-1,tvg-id="金鹰卡通" tvg-name="金鹰卡通" tvg-logo="https://live.935181.xyz/LOGO/金鹰卡通.png" group-title="湖南频道",金鹰卡通
