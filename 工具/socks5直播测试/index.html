@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOCKS5代理直播源测试工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-broadcast-tower"></i> SOCKS5代理直播源测试工具</h1>
+            <p class="subtitle">测试直播源通过SOCKS5代理的可用性。</p>
+        </header>
+        
+        <main>
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-server"></i> SOCKS5代理配置</h2>
+                <div class="form-group">
+                    <label for="proxy">代理地址（主机:端口）</label>
+                    <input type="text" id="proxy" placeholder="例如: 127.0.0.1:1080">
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="use-auth">
+                    <label for="use-auth">使用代理身份验证</label>
+                </div>
+                
+                <div id="auth-fields" class="auth-fields">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="proxy-username">代理用户名 (可选)</label>
+                            <input type="text" id="proxy-username" placeholder="如果代理需要验证">
+                        </div>
+                        <div class="form-group">
+                            <label for="proxy-password">代理密码 (可选)</label>
+                            <input type="password" id="proxy-password" placeholder="如果代理需要验证">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 隐藏 PHP 后端 API 地址 -->
+                <div class="form-group" style="display: none;">
+                    <label for="api-url">PHP后端API地址</label>
+                    <input type="text" id="api-url" placeholder="例如: https://your-domain.com/api.php" value="api.php">
+                </div>
+
+                <div class="checkbox-group" style="margin-top: 10px;">
+                    <input type="checkbox" id="force-ipv4" checked>
+                    <label for="force-ipv4">强制使用IPv4（解决IPv6重定向问题）</label>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-list-ol"></i> 批量URL配置</h2>
+                <div class="form-group">
+                    <label for="batch-urls">URL列表（一行一个URL）</label>
+                    <textarea id="batch-urls" rows="5" class="batch-textarea" placeholder="每行输入一个直播源URL，例如：
+http://tvgslb.hn.chinamobile.com:8089/180000001002/00000001000000000099000000193885/main.m3u8
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8"></textarea>
+                    <p style="margin-top: 6px; font-size: 0.85rem; color: #94a3b8;">
+                        支持M3U8格式。系统将测试每个URL的状态码，并对状态码200的M3U8文件进行内容验证。
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="custom-ua">自定义 User-Agent（可选）</label>
+                    <div class="input-row">
+                        <div class="form-group" style="flex: 2;">
+                            <input type="text" id="custom-ua" placeholder="手动输入自定义User-Agent或从下方选择">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <select id="ua-preset" class="ua-preset">
+                                <option value="">选择预置UA</option>
+                                <option value="okhttp/3.15">okhttp/3.15</option>
+                                <option value="Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1">Safari (iPhone)</option>
+                                <option value="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0">Firefox (Windows)</option>
+                                <option value="Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Mobile Safari/537.36">Chrome (Android)</option>
+                                <option value="VLC/3.0.18 LibVLC/3.0.18">VLC播放器</option>
+                                <option value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36">Chrome (Windows)</option>
+                                <option value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Safari/605.1.15">Safari (Mac)</option>
+                                <option value="Kodi/20.2 (Windows NT 10.0; Win64; x64) App_Bitness/64 Version/20.2-Git:20230521-7a5e4c5">Kodi播放器</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p style="margin-top: 6px; font-size: 0.85rem; color: #94a3b8;">
+                        从下拉选择预置User-Agent或手动输入。若留空，后端使用默认UA。
+                    </p>
+                </div>
+                
+                <div class="batch-controls">
+                    <button id="load-example-urls" class="btn btn-clear" style="padding: 10px 15px;">
+                        <i class="fas fa-file-import"></i> 加载示例URL
+                    </button>
+                    <button id="clear-urls" class="btn btn-clear" style="padding: 10px 15px;">
+                        <i class="fas fa-trash-alt"></i> 清空URL
+                    </button>
+                    <div style="flex-grow: 1;"></div>
+                    <div id="url-count" style="color: #94a3b8; font-size: 0.9rem;">URL数量: 0</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-play-circle"></i> 测试设置</h2>
+                <div class="checkbox-group" style="margin-bottom: 15px;">
+                    <input type="checkbox" id="stop-on-first-failure" checked>
+                    <label for="stop-on-first-failure">遇到第一个失败时停止（代理连接失败时）</label>
+                </div>
+                
+                <div class="checkbox-group" style="margin-bottom: 15px;">
+                    <input type="checkbox" id="test-only-m3u8" checked>
+                    <label for="test-only-m3u8">仅测试M3U8文件（跳过非M3U8 URL）</label>
+                </div>
+
+                <div class="checkbox-group" style="margin-bottom: 20px;">
+                    <input type="checkbox" id="test-proxy-first">
+                    <label for="test-proxy-first">先测试代理连通性（确保代理可用）</label>
+                </div>
+                
+                <div class="btn-group">
+                    <button id="batch-test-btn" class="btn btn-batch">
+                        <i class="fas fa-play-circle"></i> 开始测试
+                    </button>
+                    <button id="stop-batch-test" class="btn btn-clear" style="display: none;">
+                        <i class="fas fa-stop-circle"></i> 停止测试
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+            
+<!-- 在测试日志卡片中添加历史日志选择器 -->
+<!-- 在测试日志卡片中添加历史日志选择器 -->
+<div class="card" id="test-log-card" style="display: none;">
+    <h2 class="card-title"><i class="fas fa-clipboard-list"></i> 测试日志（实时）
+        <div style="display: inline-block; margin-left: 10px; font-size: 0.8rem; background: rgba(76, 201, 240, 0.2); padding: 2px 8px; border-radius: 12px;">
+            当前测试
+        </div>
+    </h2>
+    
+    <!-- 历史日志选择器 -->
+    <div class="form-group" style="margin-bottom: 10px;">
+        <label for="historical-logs">查看历史日志</label>
+        <div class="input-row">
+            <select id="historical-logs" class="ua-preset" style="flex: 2;">
+                <option value="current">当前测试</option>
+                <!-- 历史日志选项会通过JS动态添加 -->
+            </select>
+            <button id="load-historical-log" class="btn btn-clear" style="flex: 1; padding: 10px 12px; margin-left: 8px;">
+                <i class="fas fa-history"></i> 加载日志
+            </button>
+            <button id="clear-historical-logs" class="btn btn-clear" style="flex: 1; padding: 10px 12px; margin-left: 8px;">
+                <i class="fas fa-trash-alt"></i> 清空历史
+            </button>
+        </div>
+    </div>
+    
+    <div id="log-box" class="log-box">
+        <div class="log-entry">
+            <span class="log-time">[系统]</span>
+            <span class="log-info">开始测试后，日志将在这里实时显示...</span>
+        </div>
+    </div>
+    <div class="log-actions">
+        <button id="export-log-btn" class="btn btn-clear mobile-btn">
+            <i class="fas fa-download"></i> 导出日志
+        </button>
+        <button id="clear-log-btn" class="btn btn-clear mobile-btn">
+            <i class="fas fa-trash-alt"></i> 清除日志
+        </button>
+        <button id="show-realtime-log" class="btn btn-clear mobile-btn">
+            <i class="fas fa-play-circle"></i> 返回实时
+        </button>
+    </div>
+</div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-history"></i> 测试记录</h2>
+                <div class="test-records-container">
+                    <p style="margin-bottom: 15px; color: #b0b0d0; font-size: 0.95rem;">
+                        自动保存最近的测试记录，点击记录可快速填充配置。
+                    </p>
+                    
+                    <div class="records-controls">
+                        <button id="clear-records-btn" class="btn btn-clear" style="padding: 10px 15px;">
+                            <i class="fas fa-trash-alt"></i> 清除所有记录
+                        </button>
+                        <div style="flex-grow: 1;"></div>
+                        <div id="records-count" style="color: #94a3b8; font-size: 0.9rem;">记录: 0/20</div>
+                    </div>
+                    
+                    <div class="records-list" id="records-list">
+                        <div class="record-empty">
+                            <i class="fas fa-history"></i>
+                            <p>暂无测试记录</p>
+                            <p style="font-size: 0.8rem; margin-top: 5px;">完成测试后将自动保存记录</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-chart-bar"></i> 测试统计</h2>
+                <div class="batch-stats">
+                    <div class="stat-item">
+                        <div id="total-urls-stat" class="stat-value">0</div>
+                        <div class="stat-label">总URL数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="completed-urls-stat" class="stat-value">0</div>
+                        <div class="stat-label">已完成</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="success-urls-stat" class="stat-value">0</div>
+                        <div class="stat-label">成功</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="failed-urls-stat" class="stat-value">0</div>
+                        <div class="stat-label">失败</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="valid-m3u8-stat" class="stat-value">0</div>
+                        <div class="stat-label">有效M3U8</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="success-rate-stat" class="stat-value">0%</div>
+                        <div class="stat-label">成功率</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-table"></i> 测试结果</h2>
+                <div class="batch-results">
+                    <table id="batch-result-table" class="batch-result-table">
+                        <thead>
+                            <tr>
+                                 <th width="40">#</th>
+            <th>URL</th> <!-- 移除固定宽度，使用弹性布局 -->
+            <th width="80">状态码</th>
+            <th width="100">响应时间</th>
+            <th width="80">M3U8</th>
+            <th width="80">有效性</th>
+            <th width="120">详细信息</th> <!-- 限制详细信息列宽 -->
+                            </tr>
+                        </thead>
+                        <tbody id="batch-result-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 20px; color: #94a3b8;">
+                                    尚未开始测试，请配置URL并点击"开始测试"按钮
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="batch-actions" style="margin-top: 15px;">
+                    <button id="export-results-btn" class="btn btn-export-results" style="padding: 10px 20px;">
+                        <i class="fas fa-download"></i> 导出测试结果
+                    </button>
+                    <button id="clear-results-btn" class="btn btn-clear" style="padding: 10px 20px;">
+                        <i class="fas fa-trash-alt"></i> 清除结果
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-info-circle"></i> 使用说明</h2>
+                <div style="padding: 8px 0;">
+                    <h3 style="color: #4cc9f0; margin-bottom: 8px; font-size: 1.1rem;">M3U8有效性验证：</h3>
+                    <ul style="padding-left: 18px; margin-bottom: 15px; font-size: 0.95rem;">
+                        <li>检查文件头部是否为 #EXTM3U</li>
+                        <li>检查是否包含至少一个 #EXTINF 标签</li>
+                        <li>检查是否包含有效的视频段链接（.ts, .m4s等）</li>
+                        <li>分析M3U8的详细信息（时长、比特率、分段数量等）</li>
+                    </ul>
+                    
+                    <h3 style="color: #4cc9f0; margin-bottom: 8px; font-size: 1.1rem;">测试流程：</h3>
+                    <ol style="padding-left: 18px; margin-bottom: 15px; font-size: 0.95rem;">
+                        <li>在"批量URL配置"中填写多个URL（一行一个）</li>
+                        <li>配置代理服务器信息</li>
+                        <li>勾选"强制使用IPv4"可以解决某些服务器IPv6重定向问题</li>
+                        <li>点击"开始测试"按钮</li>
+                        <li>查看实时日志了解测试进度</li>
+                        <li>测试完成后会自动保存测试记录</li>
+                    </ol>
+
+                    <h3 style="color: #4cc9f0; margin-bottom: 8px; font-size: 1.1rem;">测试记录功能：</h3>
+                    <ul style="padding-left: 18px; margin-bottom: 15px; font-size: 0.95rem;">
+                        <li>每次测试完成后会自动保存配置和测试结果</li>
+                        <li>点击历史记录可快速填充到输入框</li>
+                        <li>相同的配置会自动更新，不会重复保存</li>
+                        <li>最多保存20条记录，显示最近5条</li>
+                        <li>点击记录右侧的×按钮可删除单条记录</li>
+                    </ul>
+
+                    <h3 style="color: #4cc9f0; margin-bottom: 8px; font-size: 1.1rem;">注意事项：</h3>
+                    <ul style="padding-left: 18px; font-size: 0.95rem;">
+                        <li>如果遇到"Empty reply from server"错误，请勾选"强制使用IPv4"选项</li>
+                        <li>只测试状态码为200的URL，其他状态码视为失败</li>
+                        <li>对于非M3U8文件或无效M3U8，系统会标记为无效</li>
+                        <li>测试速度取决于代理服务器网络状况和URL数量</li>
+                        <li>测试记录保存在浏览器本地，清除浏览器数据会丢失记录</li>
+                        <li>测试过程中，实时日志会显示在"开始测试"按钮下方</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>SOCKS5代理直播源测试工具 &copy; 2023 | 支持测试、M3U8验证和自动测试记录</p>
+            <p style="margin-top: 5px; font-size: 0.8rem;">需要PHP 7.0+ 和 cURL、sockets扩展支持</p>
+        </footer>
+    </div>
+    
+    <!-- 移除加载遮罩层 -->
+    
+    <script src="script.js"></script>
+</body>
+</html>
