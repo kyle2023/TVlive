@@ -110,27 +110,18 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`;
     }
 
-    // 格式化时间为更友好的显示
-    function formatDisplayTime(timestamp) {
-        const date = new Date(timestamp);
-        const now = new Date();
-        const diffMs = now - date;
-        const diffMins = Math.floor(diffMs / (1000 * 60));
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        
-        if (diffMins < 1) {
-            return '刚刚';
-        } else if (diffMins < 60) {
-            return `${diffMins}分钟前`;
-        } else if (diffHours < 24) {
-            return `${diffHours}小时前`;
-        } else if (diffDays < 7) {
-            return `${diffDays}天前`;
-        } else {
-            return `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
-        }
-    }
+// 格式化时间为完整的年月日时间
+function formatDisplayTime(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 
     // 加载历史记录
     function loadHistory() {
