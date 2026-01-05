@@ -15,17 +15,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadExampleUrlsBtn = document.getElementById('load-example-urls');
     const importTxtFileInput = document.getElementById('import-txt-file');
     const clearUrlsBtn = document.getElementById('clear-urls');
-    const exportResultsBtn = document.getElementById('export-results-btn');
     const exportValidReportBtn = document.getElementById('export-valid-report-btn');
     const clearResultsBtn = document.getElementById('clear-results-btn');
     const clearLogBtn = document.getElementById('clear-log-btn');
-    const exportLogBtn = document.getElementById('export-log-btn');
     const batchResultBody = document.getElementById('batch-result-body');
     const logBox = document.getElementById('log-box');
-    const testLogCard = document.getElementById('test-log-card');
     const clearRecordsBtn = document.getElementById('clear-records-btn');
     const recordsList = document.getElementById('records-list');
     const recordsCount = document.getElementById('records-count');
+    const loadingIndicator = document.getElementById('loading');
 
     const totalUrlsStat = document.getElementById('total-urls-stat');
     const completedUrlsStat = document.getElementById('completed-urls-stat');
@@ -36,15 +34,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlCount = document.getElementById('url-count');
     const progressFill = document.getElementById('progress-fill');
 
-    const useAuthCheckbox = document.getElementById('use-auth');
-    const authFields = document.getElementById('auth-fields');
     const customUAInput = document.getElementById('custom-ua');
     const uaPresetSelect = document.getElementById('ua-preset');
+    const customRefererInput = document.getElementById('custom-referer');
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const proxyPasswordInput = document.getElementById('proxy-password');
 
     // ==================== 辅助函数 ====================
-    function getShortUrl(url, maxLength = 180) {
+    function getShortUrl(url, maxLength = 100) {
         if (!url || url.length <= maxLength) return url;
-        // 只在结尾处省略，保留前面完整的URL
         return url.substring(0, maxLength - 3) + '...';
     }
 
@@ -71,10 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ==================== 初始化 ====================
     function init() {
-        authFields.style.display = 'none';
-        
-        if (exportResultsBtn) exportResultsBtn.style.display = 'none';
-        
+        initCollapsibleGroups();
         initTestRecords();
         bindEvents();
         
@@ -82,9 +77,41 @@ document.addEventListener('DOMContentLoaded', function() {
             loadChannelsFromText(batchUrlsTextarea.value);
         }
         
-        addLog('SOCKS5直播源测试工具已加载完成', 'success');
+        addLog('直播源有效性验证工具已加载完成', 'success');
         addLog('支持功能：频道名+URL格式、纯URL格式、分组、TXT导入、测试报告导出、测试记录', 'info');
         addLog('提示：代理配置为可选，不填写时使用直连测试', 'info');
+    }
+
+    // 初始化折叠组
+    function initCollapsibleGroups() {
+        // 初始化代理设置折叠组（默认折叠，已移除expanded类）
+        const proxyToggle = document.getElementById('proxy-toggle');
+        const proxyContent = document.getElementById('proxy-content');
+        if (proxyToggle && proxyContent) {
+            proxyToggle.addEventListener('click', () => {
+                const parent = proxyToggle.closest('.compact-group');
+                parent.classList.toggle('expanded');
+            });
+        }
+        
+        // 初始化请求配置折叠组
+        const requestToggle = document.getElementById('request-toggle');
+        const requestContent = document.getElementById('request-content');
+        if (requestToggle && requestContent) {
+            requestToggle.addEventListener('click', () => {
+                const parent = requestToggle.closest('.compact-group');
+                parent.classList.toggle('expanded');
+            });
+        }
+        
+        // 初始化密码显示/隐藏
+        if (togglePasswordBtn && proxyPasswordInput) {
+            togglePasswordBtn.addEventListener('click', () => {
+                const type = proxyPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                proxyPasswordInput.setAttribute('type', type);
+                togglePasswordBtn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+        }
     }
 
     function initTestRecords() {
@@ -102,12 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ==================== 事件绑定 ====================
     function bindEvents() {
-        if (useAuthCheckbox) {
-            useAuthCheckbox.addEventListener('change', function() {
-                authFields.style.display = this.checked ? 'block' : 'none';
-            });
-        }
-
         if (uaPresetSelect) {
             uaPresetSelect.addEventListener('change', function() {
                 if (this.value && customUAInput) {
@@ -121,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
             stopBatchTestBtn.addEventListener('click', function() {
                 batchTestStopped = true;
                 addLog('正在停止测试...', 'warning');
+                stopBatchTestBtn.disabled = true;
             });
         }
 
@@ -153,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearResultsBtn.addEventListener('click', function() {
                 batchTestResults = [];
                 if (batchResultBody) {
-                    batchResultBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#94a3b8;">测试结果已清除</td></tr>';
+                    batchResultBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">测试结果已清除</td></tr>';
                 }
                 updateStats();
                 if (progressFill) progressFill.style.width = '0%';
@@ -190,10 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     addLog('日志已清除', 'info');
                 }
             });
-        }
-
-        if (exportLogBtn) {
-            exportLogBtn.addEventListener('click', exportLog);
         }
 
         if (batchUrlsTextarea) {
@@ -250,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateUrlCount() {
         const count = channelEntries.length;
-        if (urlCount) urlCount.textContent = `频道数量: ${count}`;
+        if (urlCount) urlCount.textContent = `频道: ${count}`;
         if (totalUrlsStat) totalUrlsStat.textContent = count;
     }
 
@@ -272,23 +290,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const msgSpan = document.createElement('span');
         msgSpan.className = `log-${type}`;
-        
-        // 直接显示原始消息，不做特殊处理
-        // 让测试函数构建完整的消息
+        // 日志中URL不限制长度，直接显示完整消息
         msgSpan.textContent = message;
-        msgSpan.title = message; // 悬停显示原始完整消息
+        msgSpan.title = message;
 
         div.appendChild(timeSpan);
         div.appendChild(msgSpan);
         logBox.appendChild(div);
         logBox.scrollTop = logBox.scrollHeight;
-        
-        // 确保日志区域可见
-        if (type === 'info' || type === 'success' || type === 'error') {
-            setTimeout(() => {
-                if (logBox) logBox.scrollTop = logBox.scrollHeight;
-            }, 50);
-        }
     }
 
     async function startBatchTest() {
@@ -302,38 +311,36 @@ document.addEventListener('DOMContentLoaded', function() {
         batchTestStopped = false;
         batchTestResults = [];
         
+        // 显示加载状态
+        if (loadingIndicator) {
+            loadingIndicator.style.display = 'flex';
+        }
+        
         if (batchResultBody) {
-            batchResultBody.innerHTML = '<tr><td colspan="7">测试中...</td></tr>';
+            batchResultBody.innerHTML = '<tr><td colspan="5">测试中...</td></tr>';
         }
         
         if (progressFill) progressFill.style.width = '0%';
         
-        // 显示测试日志卡片并自动滚动到该位置
-        if (testLogCard) {
-            testLogCard.style.display = 'block';
-            // 延迟执行滚动，确保DOM已更新
-            setTimeout(() => {
-                testLogCard.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start'
-                });
-            }, 100);
-        }
-        
+        // 切换按钮状态
         if (batchTestBtn) batchTestBtn.style.display = 'none';
-        if (stopBatchTestBtn) stopBatchTestBtn.style.display = 'block';
+        if (stopBatchTestBtn) {
+            stopBatchTestBtn.style.display = 'block';
+            stopBatchTestBtn.disabled = false;
+        }
 
         const proxyInput = document.getElementById('proxy')?.value.trim() || '';
         const [proxyHost, proxyPortStr] = proxyInput ? proxyInput.split(':') : ['', ''];
         const proxyPort = proxyPortStr ? parseInt(proxyPortStr) : 1080;
-        const useAuth = useAuthCheckbox?.checked || false;
         const proxyUsername = document.getElementById('proxy-username')?.value.trim() || '';
         const proxyPassword = document.getElementById('proxy-password')?.value.trim() || '';
         const customUA = customUAInput?.value.trim() || '';
+        const customReferer = customRefererInput?.value.trim() || '';
         const forceIPv4 = document.getElementById('force-ipv4')?.checked || false;
         const testProxyFirst = document.getElementById('test-proxy-first')?.checked || false;
         const stopOnFirstFailure = document.getElementById('stop-on-first-failure')?.checked || false;
         const testOnlyM3U8 = document.getElementById('test-only-m3u8')?.checked || false;
+        const timeout = document.getElementById('timeout')?.value || 8;
 
         const urls = channelEntries.map(e => e.url);
 
@@ -354,8 +361,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         test_type: 'test_proxy',
                         proxy_host: proxyHost,
                         proxy_port: proxyPort,
-                        proxy_username: useAuth ? proxyUsername : '',
-                        proxy_password: useAuth ? proxyPassword : ''
+                        proxy_username: proxyUsername,
+                        proxy_password: proxyPassword
                     })
                 }).then(r => r.json());
 
@@ -402,9 +409,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 addResultToTable(res, index);
                 updateStats();
                 
-                // 构建完整的日志消息：序号/总数 频道名 - 状态 (详情) → URL
-                const displayUrl = getShortUrl(entry.url, 120);
-                addLog(`[${index}/${urls.length}] ${entry.name} - 跳过 (非M3U8文件) → ${entry.url}`, 'warning');
+                // 在日志中显示详细信息，URL不限制长度
+                const details = '跳过非M3U8文件';
+                addLog(`[${index}/${urls.length}] ${entry.name} - 跳过 (${details}) → ${entry.url}`, 'warning');
                 continue;
             }
 
@@ -412,7 +419,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 test_type: 'batch_test_m3u8_via_proxy',
                 urls: url,
                 user_agent: customUA,
-                force_ipv4: forceIPv4
+                referer: customReferer,
+                force_ipv4: forceIPv4,
+                timeout: parseInt(timeout)
             };
             
             // 只有在有代理时才添加代理参数
@@ -420,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 payload.proxy_host = proxyHost;
                 payload.proxy_port = proxyPort;
                 
-                if (useAuth && proxyUsername) {
+                if (proxyUsername) {
                     payload.proxy_username = proxyUsername;
                     payload.proxy_password = proxyPassword;
                 }
@@ -456,12 +465,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 addResultToTable(result, index);
                 updateStats();
 
-                // 构建完整的日志消息
-                const displayUrl = getShortUrl(entry.url, 120);
-                
+                // 构建详细的日志消息，URL不限制长度
                 if (result.success) {
-                    // 成功：显示响应时间
-                    addLog(`[${index}/${urls.length}] ${entry.name} - 成功 (${result.response_time?.toFixed(0) || 0}ms) → ${entry.url}`, 'success');
+                    // 成功：显示所有详细信息
+                    let details = `状态码: ${result.status_code || 0}`;
+                    details += `, 响应时间: ${result.response_time?.toFixed(0) || 0}ms`;
+                    if (result.is_m3u8) {
+                        details += `, M3U8: ${result.m3u8_valid ? '有效' : '无效'}`;
+                        if (result.m3u8_valid && result.m3u8_info) {
+                            details += `, 分段: ${result.m3u8_info.ts_segments || 0}`;
+                            if (result.m3u8_info.avg_duration > 0) {
+                                details += `, 平均时长: ${result.m3u8_info.avg_duration}s`;
+                            }
+                        }
+                    }
+                    if (result.redirect_chain?.length > 0) {
+                        details += `, 重定向: ${result.redirect_chain.length}次`;
+                    }
+                    
+                    addLog(`[${index}/${urls.length}] ${entry.name} - 成功 (${details}) → ${entry.url}`, 'success');
                 } else {
                     // 失败：显示状态码和错误信息
                     let errorDetail = '';
@@ -493,8 +515,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 addResultToTable(result, index);
                 updateStats();
                 
-                // 网络错误：显示错误信息
-                const displayUrl = getShortUrl(entry.url, 120);
+                // 网络错误：显示错误信息，URL不限制长度
                 addLog(`[${index}/${urls.length}] ${entry.name} - 网络错误 (${err.message}) → ${entry.url}`, 'error');
             }
         }
@@ -504,14 +525,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function resetTestState() {
         isBatchTesting = false;
+        if (loadingIndicator) {
+            loadingIndicator.style.display = 'none';
+        }
         if (batchTestBtn) batchTestBtn.style.display = 'block';
-        if (stopBatchTestBtn) stopBatchTestBtn.style.display = 'none';
+        if (stopBatchTestBtn) {
+            stopBatchTestBtn.style.display = 'none';
+            stopBatchTestBtn.disabled = false;
+        }
     }
 
     function finishTest() {
         isBatchTesting = false;
-        if (batchTestBtn) batchTestBtn.style.display = 'block';
-        if (stopBatchTestBtn) stopBatchTestBtn.style.display = 'none';
+        resetTestState();
         
         if (progressFill) updateProgress(100);
         
@@ -545,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function addResultToTable(result, index) {
         if (!batchResultBody) return;
         
-        if (batchResultBody.querySelector('td[colspan="7"]') && 
+        if (batchResultBody.querySelector('td[colspan="5"]') && 
             batchResultBody.querySelector('td').textContent === '测试中...') {
             batchResultBody.innerHTML = '';
         }
@@ -562,27 +588,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 result.status_code >= 400 ? 'status-404' :
                                 result.status_code >= 500 ? 'status-500' : 'status-302';
 
-        const m3u8Status = result.skipped ? '跳过' : (result.is_m3u8 ? '是' : '否');
-        const m3u8Class = result.skipped ? 'status-warning-badge' : (result.is_m3u8 ? 'm3u8-badge' : 'status-neutral');
-
         const validStatus = result.skipped ? '-' : (result.m3u8_valid ? '有效' : (result.is_m3u8 ? '无效' : '-'));
         const validClass = result.skipped ? 'status-neutral' : (result.m3u8_valid ? 'valid-badge' : 'invalid-badge');
-
-        let details = result.skipped ? '跳过非M3U8' :
-                      result.success && result.m3u8_valid ? `分段: ${result.m3u8_info?.ts_segments || 0}` :
-                      result.success ? `成功 ${result.response_time?.toFixed(0) || 0}ms` : (result.error || '失败');
-
-        if (result.redirect_chain?.length > 0) details += ` (${result.redirect_chain.length}次跳转)`;
 
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index}</td>
             <td class="url-cell" title="${fullText}">${displayText}</td>
-            <td><span class="status-code ${statusCodeClass}">${result.status_code || '-'}</span></td>
-            <td>${result.response_time?.toFixed(0) || 0}ms</td>
-            <td><span class="status-badge ${m3u8Class}">${m3u8Status}</span></td>
-            <td><span class="status-badge ${validClass}">${validStatus}</span></td>
-            <td class="details-cell" title="${details}">${details}</td>
+            <td class="fixed-width"><span class="status-code ${statusCodeClass}">${result.status_code || '-'}</span></td>
+            <td class="fixed-width">${result.response_time?.toFixed(0) || 0}ms</td>
         `;
         batchResultBody.appendChild(row);
     }
@@ -601,11 +615,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p style="font-size: 0.8rem; margin-top: 5px;">完成测试后将自动保存记录</p>
                 </div>
             `;
-            if (recordsCount) recordsCount.textContent = `记录: 0/${MAX_RECORDS}`;
+            if (recordsCount) recordsCount.textContent = `记录: ${testRecords.length}/${MAX_RECORDS}`;
             return;
         }
         
-        testRecords.forEach((record, index) => {
+        // 只显示最近5条记录
+        const displayRecords = testRecords.slice(0, 5);
+        
+        displayRecords.forEach((record, index) => {
             const recordElement = document.createElement('div');
             recordElement.className = 'record-compact';
             
@@ -618,8 +635,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 只显示第一个URL，完整显示一行
             let urlDisplay = '';
             if (record.urls && record.urls.length > 0) {
-                // 显示第一个URL，完整显示，只在结尾省略
-                urlDisplay = getShortUrl(record.urls[0], 180); // 显示更长的URL
+                urlDisplay = getShortUrl(record.urls[0], 180);
             }
             
             // 完整的URL列表用于悬停提示
@@ -675,15 +691,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (document.getElementById('proxy-password')) {
             document.getElementById('proxy-password').value = record.proxyPassword || '';
         }
-        if (useAuthCheckbox) {
-            useAuthCheckbox.checked = !!record.proxyUsername;
-        }
-        if (authFields) {
-            authFields.style.display = useAuthCheckbox.checked ? 'block' : 'none';
-        }
         
         if (customUAInput && record.customUA) {
             customUAInput.value = record.customUA;
+        }
+        
+        if (customRefererInput && record.customReferer) {
+            customRefererInput.value = record.customReferer || '';
         }
         
         if (batchUrlsTextarea) {
@@ -734,13 +748,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const proxyInput = document.getElementById('proxy')?.value.trim() || '';
         const proxyUsername = document.getElementById('proxy-username')?.value.trim() || '';
+        const proxyPassword = document.getElementById('proxy-password')?.value.trim() || '';
         const customUA = customUAInput?.value.trim() || '';
+        const customReferer = customRefererInput?.value.trim() || '';
         
         const record = {
             timestamp: timestamp,
             proxy: proxyInput,
             proxyUsername: proxyUsername,
+            proxyPassword: proxyPassword,
             customUA: customUA,
+            customReferer: customReferer,
             urls: channelEntries.map(e => e.url),
             channelEntries: JSON.parse(JSON.stringify(channelEntries)),
             results: batchTestResults.map(r => ({
@@ -849,43 +867,11 @@ http://tvgslb.hn.chinamobile.com:8089/180000001002/00000001000000000007000000001
         const blob = new Blob(['\uFEFF' + report], { type: 'text/plain;charset=utf-8' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `测试报告_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}.txt`;
+        a.download = `有效性验证报告_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}.txt`;
         a.click();
         URL.revokeObjectURL(a.href);
 
         addLog('测试报告已导出', 'success');
-    }
-
-    function exportLog() {
-        if (currentTestLogs.length === 0) {
-            alert('没有日志可导出');
-            return;
-        }
-        
-        const now = new Date();
-        const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
-        
-        let logText = `=== SOCKS5测试工具日志 ===\n`;
-        logText += `生成时间: ${new Date().toLocaleString()}\n`;
-        logText += `日志数量: ${currentTestLogs.length}条\n`;
-        logText += '='.repeat(40) + '\n\n';
-        
-        currentTestLogs.forEach(log => {
-            const typeText = log.type === 'info' ? '[信息]' : 
-                           log.type === 'success' ? '[成功]' : 
-                           log.type === 'error' ? '[错误]' : 
-                           log.type === 'warning' ? '[警告]' : '[未知]';
-            logText += `${log.time} ${typeText} ${log.message}\n`;
-        });
-        
-        const blob = new Blob(['\uFEFF' + logText], { type: 'text/plain;charset=utf-8' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `测试日志_${timeStr}.txt`;
-        a.click();
-        URL.revokeObjectURL(a.href);
-        
-        addLog('日志已导出', 'success');
     }
 
     // ==================== 初始化执行 ====================

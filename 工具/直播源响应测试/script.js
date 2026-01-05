@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkBackendConnection(context = '') {
         const contextText = context ? `(${context})` : '';
         
-        return fetch('proxy.php', { method: 'HEAD' })
+        return fetch('api.php', { method: 'HEAD' })
             .then(res => {
                 if (res.ok) {
                     addLog(`PHP代理后端连接正常 ${contextText}`, 'success');
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(err => {
-                addLog(`无法连接到proxy.php${contextText}: ${err.message}`, 'error');
+                addLog(`无法连接到api.php${contextText}: ${err.message}`, 'error');
                 return false;
             });
     }
@@ -995,7 +995,7 @@ function downloadFile(url, filename) {
             addLog(`使用SOCKS5代理: ${requestData.proxy}`, 'info');
         }
 
-        fetch('proxy.php', {
+        fetch('api.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

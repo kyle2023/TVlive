@@ -25,6 +25,7 @@ ini_set('memory_limit', '256M');
 error_reporting(0);
 ini_set('display_errors', 0);
 
+
 function logRequest($message, $data = null) {
     $logDir = __DIR__ . '/logs';
     if (!is_dir($logDir)) {
@@ -42,6 +43,7 @@ function logRequest($message, $data = null) {
     $logMessage .= "\n";
     @file_put_contents($logFile, $logMessage, FILE_APPEND);
 }
+
 
 function returnError($message, $code = 500, $isProxyTimeout = false) {
     ob_end_clean();
