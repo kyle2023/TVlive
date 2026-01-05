@@ -1,7 +1,7 @@
 <?php
 /**
  * SOCKS5代理测试API（增强版）
- * 支持：SOCKS5代理（可选） + 直播源测试 + 自定义 User-Agent + 批量测试 + 强制IPv4 + 跳转链追踪
+ * 支持：SOCKS5代理（可选） + 直播源测试 + 自定义 User-Agent + 批量测试 + 强制IPv4 + 跳转链追踪 + Referer支持
  */
 
 // 设置响应头
@@ -35,8 +35,10 @@ if (!$data) {
 $testType = $data['test_type'] ?? '';
 $response = [];
 
-// 自定义 User-Agent（可能为空）
+// 自定义 User-Agent 和 Referer（可能为空）
 $customUA = $data['user_agent'] ?? '';
+$referer = $data['referer'] ?? '';
+$timeout = $data['timeout'] ?? 8;
 
 try {
     switch ($testType) {
@@ -45,7 +47,7 @@ try {
             break;
 
         case 'batch_test_m3u8_via_proxy':
-            $response = batchTestM3U8ViaProxy($data, $customUA);
+            $response = batchTestM3U8ViaProxy($data, $customUA, $referer, $timeout);
             break;
 
         default:
@@ -117,13 +119,13 @@ function testSocks5Proxy($data) {
 /**
  * 批量测试M3U8（支持代理和直连模式）
  */
-function batchTestM3U8ViaProxy($data, $customUA = '') {
+function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 8) {
     $urlsText = $data['urls'] ?? '';
     $proxyHost = $data['proxy_host'] ?? '';
     $proxyPort = $data['proxy_port'] ?? 1080;
     $proxyUsername = $data['proxy_username'] ?? '';
     $proxyPassword = $data['proxy_password'] ?? '';
-    $forceIPv4 = $data['force_ipv4'] ?? false; // 新增：强制使用IPv4
+    $forceIPv4 = $data['force_ipv4'] ?? false;
 
     if (!$urlsText) return ['success' => false, 'error' => 'URL列表不能为空'];
     
@@ -179,17 +181,22 @@ function batchTestM3U8ViaProxy($data, $customUA = '') {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10); // 增加最大重定向次数
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 
         // 强制使用IPv4（解决IPv6重定向问题）
         if ($forceIPv4) {
             curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         }
 
-        // 默认 UA
+        // 设置 User-Agent
         $defaultUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0 Safari/537.36';
         curl_setopt($ch, CURLOPT_USERAGENT, $customUA ?: $defaultUA);
+        
+        // 设置 Referer（如果提供）
+        if (!empty($referer)) {
+            curl_setopt($ch, CURLOPT_REFERER, $referer);
+        }
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
