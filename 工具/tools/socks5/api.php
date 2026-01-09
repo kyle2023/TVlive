@@ -23,9 +23,6 @@ ini_set('memory_limit', '128M');
 error_reporting(0);
 ini_set('display_errors', 0);
 
-// 包含IP查询模块
-require_once 'ip_query.php';
-
 // 简单错误日志（可选）
 function logError($message) {
     // 不创建日志文件，仅用于内部记录
@@ -135,8 +132,7 @@ function testProxyConnectivity($data, $testAnonymity = false) {
     $proxy_port = intval($proxy_parts[1]);
     
     // 查询代理IP的归属地
-    $proxyIPInfo = queryIPInfo($proxy_ip);
-    $proxyLocation = formatIPInfo($proxyIPInfo);
+    $proxyLocation = "代理IP: {$proxy_ip}";
     
     // 测试代理的连通性
     $startTime = microtime(true);
@@ -223,10 +219,7 @@ function testProxyConnectivity($data, $testAnonymity = false) {
                 $ipData = json_decode($body, true);
                 if ($ipData && isset($ipData['origin'])) {
                     $realIp = $ipData['origin'];
-                    
-                    // 查询真实IP的归属地
-                    $realIPInfo = queryIPInfo($realIp);
-                    $realIPLocation = formatIPInfo($realIPInfo);
+                    $realIPLocation = "真实IP: {$realIp}";
                     
                     // 检查返回的IP是否与代理IP相同（简单匿名性检查）
                     $isAnonymous = ($realIp !== $proxy_ip);
@@ -302,10 +295,49 @@ function testStreamWithProxy($data) {
     $startTime = microtime(true);
     
     try {
+        // 解析目标URL
+        $parsed = parse_url($url);
+        if (!$parsed || !isset($parsed['scheme']) || !isset($parsed['host'])) {
+            return [
+                'success' => false,
+                'url' => $url,
+                'final_url' => $url,
+                'proxy' => $proxy_address,
+                'response_time' => 0,
+                'error' => 'URL格式无效',
+                'test_type' => 'stream_test',
+                'proxy_used' => true,
+                'status' => 'failed',
+                'is_m3u8' => false,
+                'is_valid_m3u8' => false,
+                'redirect_count' => 0
+            ];
+        }
+        
+        $scheme = $parsed['scheme'];
+        $host = $parsed['host'];
+        $port = $parsed['port'] ?? ($scheme === 'https' ? 443 : 80);
+        $path = ($parsed['path'] ?? '/') . (isset($parsed['query']) ? '?' . $parsed['query'] : '');
+        
+        // 解析域名为IPv4地址（强制IPv4）
+        $resolvedIp = resolveToIPv4($host);
+        $dnsResolved = false;
+        $requestUrl = $url;
+        
         $ch = curl_init();
         
+        if ($resolvedIp) {
+            // 使用解析到的IPv4地址构建URL
+            $requestUrl = "{$scheme}://{$resolvedIp}:{$port}{$path}";
+            $dnsResolved = true;
+            $headers_array = ["Host: {$host}", "Connection: close"];
+        } else {
+            // 无法解析IPv4地址，使用原始域名
+            $headers_array = ["Host: {$host}", "Connection: close"];
+        }
+        
         $curlOptions = [
-            CURLOPT_URL => $url,
+            CURLOPT_URL => $requestUrl,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER => true,
             CURLOPT_TIMEOUT => $timeout,
@@ -314,31 +346,34 @@ function testStreamWithProxy($data) {
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_FOLLOWLOCATION => true, // 启用302重定向跟随
             CURLOPT_MAXREDIRS => 5, // 最大重定向次数
-            CURLOPT_PROXYTYPE => CURLPROXY_SOCKS5,
-            CURLOPT_PROXY => $proxy_address,
             CURLOPT_USERAGENT => $request_headers['User-Agent'] ?? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             CURLOPT_FAILONERROR => false,
             CURLOPT_NOBODY => false,
             CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4, // 强制使用IPv4解析
         ];
         
-        // 如果代理需要认证
-        if (!empty($proxy_username) && !empty($proxy_password)) {
-            $curlOptions[CURLOPT_PROXYUSERPWD] = $proxy_username . ':' . $proxy_password;
+        // 设置代理
+        if ($proxy_address) {
+            if ($dnsResolved && $resolvedIp) {
+                // 有目标IP地址，使用普通SOCKS5（连接IP地址）
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+            } else {
+                // 没有目标IP，使用SOCKS5_HOSTNAME让代理解析域名
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5_HOSTNAME);
+            }
+            
+            curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
+            
+            if (!empty($proxy_username) && !empty($proxy_password)) {
+                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy_username . ':' . $proxy_password);
+            }
         }
         
-        // 设置请求头
-        $headers_array = ["Connection: close"];
+        // 添加其他请求头
         foreach ($request_headers as $k => $v) {
             if (!in_array(strtolower($k), ['host', 'connection'])) {
                 $headers_array[] = "{$k}: {$v}";
             }
-        }
-        
-        // 提取host
-        $parsed = parse_url($url);
-        if ($parsed && isset($parsed['host'])) {
-            $headers_array[] = "Host: " . $parsed['host'];
         }
         
         $curlOptions[CURLOPT_HTTPHEADER] = $headers_array;
@@ -398,7 +433,9 @@ function testStreamWithProxy($data) {
                 'status' => 'failed',
                 'is_m3u8' => false,
                 'is_valid_m3u8' => false,
-                'redirect_count' => $info['redirect_count'] ?? 0
+                'redirect_count' => $info['redirect_count'] ?? 0,
+                'dns_resolved' => $dnsResolved,
+                'resolved_ip' => $resolvedIp
             ];
         }
         
@@ -492,7 +529,9 @@ function testStreamWithProxy($data) {
             'details' => $success ? 
                 ($isM3U8 ? ($isValidM3U8 ? '有效的M3U8直播源' : 'M3U8格式但内容可能无效') : '直播源访问成功') . 
                 ($info['redirect_count'] > 0 ? " (重定向{$info['redirect_count']}次)" : '') : 
-                '直播源访问失败'
+                '直播源访问失败',
+            'dns_resolved' => $dnsResolved,
+            'resolved_ip' => $resolvedIp
         ];
         
     } catch (Exception $e) {
@@ -513,6 +552,30 @@ function testStreamWithProxy($data) {
             'redirect_count' => 0
         ];
     }
+}
+
+/**
+ * 解析域名为IPv4地址
+ */
+function resolveToIPv4($domain) {
+    // 如果是IP地址，直接返回
+    if (filter_var($domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        return $domain;
+    }
+    
+    // 使用dns_get_record获取A记录（IPv4地址）
+    $records = @dns_get_record($domain, DNS_A);
+    if ($records && isset($records[0]['ip'])) {
+        return $records[0]['ip'];
+    }
+    
+    // 备用方法：使用gethostbyname
+    $ip = @gethostbyname($domain);
+    if ($ip !== $domain && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        return $ip;
+    }
+    
+    return null;
 }
 
 /**

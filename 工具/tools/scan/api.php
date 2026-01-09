@@ -5,6 +5,7 @@
  * - 支持hosts绑定
  * - 优化扫描性能
  * - 减少不必要的数据返回
+ * - 【新增】强制使用IPv4解析（在使用SOCKS5代理时）
  */
 
 ob_start();
@@ -186,9 +187,35 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
 
         $ch = curl_init();
 
+        // 新增：当使用SOCKS5代理时，如果没有hosts映射，尝试解析域名为IPv4地址
+        $dnsResolved = false;
+        $originalHost = $host; // 保存原始主机名
+        $resolvedIp = null;
+        
+        if ($proxy_address && !$target_ip) {
+            // 尝试解析域名为IPv4地址
+            $resolvedIp = resolveToIPv4($host);
+            if ($resolvedIp) {
+                $target_ip = $resolvedIp;
+                $dnsResolved = true;
+            }
+        }
+
         if ($target_ip) {
-            $request_url = "{$scheme}://{$target_ip}:{$port}{$path}";
-            curl_setopt($ch, CURLOPT_RESOLVE, ["{$host}:{$port}:{$target_ip}"]);
+            if ($dnsResolved) {
+                // 对于DNS解析的IP，我们需要使用IP地址构建URL，但设置正确的Host头
+                $request_url = "{$scheme}://{$target_ip}:{$port}{$path}";
+                $headers_array = ["Host: {$originalHost}", "Connection: close"];
+            } else {
+                // 原始hosts映射的处理
+                $request_url = "{$scheme}://{$target_ip}:{$port}{$path}";
+                curl_setopt($ch, CURLOPT_RESOLVE, ["{$host}:{$port}:{$target_ip}"]);
+                $headers_array = ["Host: {$host}", "Connection: close"];
+            }
+        } else {
+            // 没有IP地址，使用原始URL
+            $request_url = $current_url;
+            $headers_array = ["Host: {$host}", "Connection: close"];
         }
 
         $curlOptions = [
@@ -208,27 +235,38 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
             CURLOPT_NOBODY => false,
         ];
         
-// 扫描模式优化 - 增加限制到更大的值，避免中断正常响应
-if ($scan_mode && $isM3U8Url) {
-    curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
-    curl_setopt($ch, CURLOPT_NOPROGRESS, false);
-    curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, function($resource, $download_size, $downloaded, $upload_size, $uploaded) {
-        // 增加限制到10KB，避免过早中断正常的M3U8响应
-        if ($downloaded > 10240) { // 10KB
-            return 1; // 中断下载
+        // 强制IPv4解析（总是启用）
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        
+        // 扫描模式优化 - 增加限制到更大的值，避免中断正常响应
+        if ($scan_mode && $isM3U8Url) {
+            curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
+            curl_setopt($ch, CURLOPT_NOPROGRESS, false);
+            curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, function($resource, $download_size, $downloaded, $upload_size, $uploaded) {
+                // 增加限制到10KB，避免过早中断正常的M3U8响应
+                if ($downloaded > 10240) { // 10KB
+                    return 1; // 中断下载
+                }
+                return 0;
+            });
+            
+            // 设置更大的超时时间用于下载M3U8文件
+            curl_setopt($ch, CURLOPT_TIMEOUT, max($timeout, 10));
         }
-        return 0;
-    });
-    
-    // 设置更大的超时时间用于下载M3U8文件
-    curl_setopt($ch, CURLOPT_TIMEOUT, max($timeout, 10));
-}
 
         curl_setopt_array($ch, $curlOptions);
 
         // 设置代理
         if ($proxy_address) {
-            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+            // 根据是否有目标IP选择代理类型
+            if ($target_ip) {
+                // 有目标IP地址，使用普通SOCKS5（连接IP地址）
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+            } else {
+                // 没有目标IP，使用SOCKS5_HOSTNAME让代理解析域名
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5_HOSTNAME);
+            }
+            
             curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
             
             if (!empty($proxy_username) && !empty($proxy_password)) {
@@ -238,8 +276,7 @@ if ($scan_mode && $isM3U8Url) {
             curl_setopt($ch, CURLOPT_PROXYTIMEOUT, 3);
         }
 
-        // 设置请求头
-        $headers_array = ["Host: {$host}", "Connection: close"];
+        // 添加其他请求头
         foreach ($request_headers as $k => $v) {
             if (!in_array(strtolower($k), ['host', 'connection'])) {
                 $headers_array[] = "{$k}: {$v}";
@@ -337,7 +374,9 @@ if ($scan_mode && $isM3U8Url) {
                 'error_details' => $errorDetails,
                 'curl_error_code' => $errno,
                 'curl_error_message' => $error,
-                'proxy_used' => !empty($proxy_address)
+                'proxy_used' => !empty($proxy_address),
+                'dns_resolved' => $dnsResolved, // 添加DNS解析信息
+                'resolved_ip' => $resolvedIp
             ];
         }
 
@@ -380,8 +419,29 @@ if ($scan_mode && $isM3U8Url) {
         'error_details' => $errorDetails,
         'curl_error_code' => null,
         'curl_error_message' => null,
-        'proxy_used' => !empty($proxy_address)
+        'proxy_used' => !empty($proxy_address),
+        'dns_resolved' => $dnsResolved, // 添加DNS解析信息
+        'resolved_ip' => $resolvedIp
     ];
+}
+
+/**
+ * 解析域名为IPv4地址
+ */
+function resolveToIPv4($domain) {
+    // 使用dns_get_record获取A记录（IPv4地址）
+    $records = @dns_get_record($domain, DNS_A);
+    if ($records && isset($records[0]['ip'])) {
+        return $records[0]['ip'];
+    }
+    
+    // 备用方法：使用gethostbyname
+    $ip = @gethostbyname($domain);
+    if ($ip !== $domain && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        return $ip;
+    }
+    
+    return null;
 }
 
 function is_absolute_url($url) {

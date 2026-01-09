@@ -116,7 +116,7 @@ function testSocks5Proxy($data) {
 }
 
 /**
- * 批量测试M3U8（支持代理和直连模式）- 改进的hosts处理版本
+ * 批量测试M3U8（支持代理和直连模式）- 修复版
  */
 function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 8) {
     $urlsText = $data['urls'] ?? '';
@@ -252,7 +252,7 @@ function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 
             'status_code' => $httpCode,
             'response_time' => $responseTime,
             'content_type' => $contentType,
-            'is_m3u8' => $isM3u8,
+            'is_m3u8' => $isM3U8,
             'm3u8_valid' => $m3u8Valid,
             'm3u8_info' => $m3u8Info,
             'redirect_chain' => $redirectChain,
@@ -278,8 +278,7 @@ function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 
 }
 
 /**
- * 执行单个请求（支持重定向和hosts解析）
- * 参考您提供的代理脚本实现
+ * 执行单个请求（支持重定向和hosts解析）- 修复版
  */
 function executeRequestWithHosts($url, $hostsMap, $timeout, $proxyHost, $proxyPort, $proxyUsername, $proxyPassword, $forceIPv4, $customUA, $referer) {
     $maxRedirects = 10;
@@ -351,13 +350,21 @@ function executeRequestWithHosts($url, $hostsMap, $timeout, $proxyHost, $proxyPo
         
         // 设置Referer
         if (!empty($referer)) {
-            curl_setopt($ch, CURLOPT_REFERER, $referer);
+            $curlOptions[CURLOPT_REFERER] = $referer;
         }
         
         // 设置代理
         if ($proxyHost && $proxyPort) {
             curl_setopt($ch, CURLOPT_PROXY, "$proxyHost:$proxyPort");
-            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+            
+            // 根据是否有目标IP选择代理类型
+            if ($targetIp) {
+                // 有目标IP地址，使用普通SOCKS5
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+            } else {
+                // 没有目标IP，使用SOCKS5_HOSTNAME让代理解析域名
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5_HOSTNAME);
+            }
             
             if (!empty($proxyUsername) && !empty($proxyPassword)) {
                 curl_setopt($ch, CURLOPT_PROXYUSERPWD, "$proxyUsername:$proxyPassword");
@@ -478,9 +485,6 @@ function resolveRelativeUrl($baseUrl, $relativeUrl) {
            (isset($base['port']) ? ':' . $base['port'] : '') . $dir . $relativeUrl;
 }
 
-/**
- * 验证M3U8内容是否有效
- */
 /**
  * 验证M3U8内容是否有效（支持主播放列表和媒体播放列表）
  */

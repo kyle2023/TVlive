@@ -572,6 +572,8 @@ function extractProxyAuthError($body) {
     return $cleanBody;
 }
 
+// 修改executeRequest函数中的DNS解析部分
+
 function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $proxy_address, $proxy_username, $proxy_password, $follow_redirects, $max_redirects) {
     $redirects = [];
     $redirect_count = 0;
@@ -581,6 +583,23 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
     $final_body = '';
     $final_status = 0;
     $final_time = 0;
+
+    // 新增函数：解析域名为IPv4地址
+    function resolveToIPv4($domain) {
+        // 使用dns_get_record获取A记录（IPv4地址）
+        $records = @dns_get_record($domain, DNS_A);
+        if ($records && isset($records[0]['ip'])) {
+            return $records[0]['ip'];
+        }
+        
+        // 备用方法：使用gethostbyname
+        $ip = @gethostbyname($domain);
+        if ($ip !== $domain && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return $ip;
+        }
+        
+        return null;
+    }
 
     while (true) {
         $parsed = parse_url($current_url);
@@ -627,9 +646,48 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
 
         $ch = curl_init();
 
+        // 新增：当使用SOCKS5代理时，如果没有hosts映射，尝试解析域名为IPv4地址
+        $dnsResolved = false;
+        $originalHost = $host; // 保存原始主机名
+        $resolvedIp = null;
+        
+        if ($proxy_address && !$target_ip) {
+            // 强制解析域名为IPv4地址
+            $resolvedIp = resolveToIPv4($host);
+            if ($resolvedIp) {
+                $target_ip = $resolvedIp;
+                $dnsResolved = true;
+                // 记录解析结果（用于调试）
+                $hostsMap[$host] = $resolvedIp; // 临时添加到hostsMap
+                logRequest("DNS解析结果", [
+                    'host' => $host,
+                    'ip' => $resolvedIp,
+                    'proxy' => $proxy_address
+                ]);
+            }
+        }
+
         if ($target_ip) {
-            $request_url = "{$scheme}://{$target_ip}:{$port}{$path}";
-            curl_setopt($ch, CURLOPT_RESOLVE, ["{$host}:{$port}:{$target_ip}"]);
+            // 如果hosts映射或DNS解析提供了IP地址
+            if ($dnsResolved) {
+                // 对于DNS解析的IP，我们需要使用IP地址构建URL，但设置正确的Host头
+                $request_url = "{$scheme}://{$target_ip}:{$port}{$path}";
+                
+                // 注意：对于SOCKS5代理，我们不能使用CURLOPT_RESOLVE，因为我们要通过代理连接IP地址
+                // 而是直接使用IP地址构建URL
+                
+                // 标记这是DNS解析的结果
+                $headers_array = ["Host: {$originalHost}", "Connection: close"];
+            } else {
+                // 原始hosts映射的处理
+                $request_url = "{$scheme}://{$target_ip}:{$port}{$path}";
+                curl_setopt($ch, CURLOPT_RESOLVE, ["{$host}:{$port}:{$target_ip}"]);
+                $headers_array = ["Host: {$host}", "Connection: close"];
+            }
+        } else {
+            // 没有IP地址，使用原始URL
+            $request_url = $current_url;
+            $headers_array = ["Host: {$host}", "Connection: close"];
         }
 
         $curlOptions = [
@@ -648,6 +706,9 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
             CURLOPT_FAILONERROR => false,
         ];
         
+        // 强制IPv4解析（影响代理服务器和目标服务器的连接）
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        
         if ($isMediaUrl) {
             $curlOptions[CURLOPT_NOBODY] = true;
             $curlOptions[CURLOPT_CUSTOMREQUEST] = 'HEAD';
@@ -658,7 +719,14 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
         if ($proxy_address) {
             curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
             curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
-            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+            
+            // 当有目标IP地址时，使用普通SOCKS5代理（连接IP地址）
+            // 当没有目标IP地址时，使用SOCKS5_HOSTNAME让代理解析域名
+            if ($target_ip) {
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+            } else {
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5_HOSTNAME);
+            }
             
             if (!empty($proxy_username) && !empty($proxy_password)) {
                 curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy_username . ':' . $proxy_password);
@@ -667,7 +735,7 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
             curl_setopt($ch, CURLOPT_PROXYTIMEOUT, 10);
         }
 
-        $headers_array = ["Host: {$host}", "Connection: close"];
+        // 添加其他请求头
         foreach ($request_headers as $k => $v) {
             if (!in_array(strtolower($k), ['host', 'connection'])) {
                 $headers_array[] = "{$k}: {$v}";
@@ -773,7 +841,9 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
             'is_proxy_error' => $isProxyTimeout || $isProxyAuthError,
             'is_proxy_auth_failed' => $isProxyAuthError,
             'curl_error_code' => $errno ?? null,
-            'curl_error_message' => $error ?? null
+            'curl_error_message' => $error ?? null,
+            'dns_resolved' => $dnsResolved, // 记录DNS解析信息
+            'resolved_ip' => $resolvedIp // 记录解析的IP地址
         ];
 
         if ($resp === false || $isProxyAuthError) {
@@ -793,7 +863,9 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
                 'error_details' => $errorDetails,
                 'curl_error_code' => $errno,
                 'curl_error_message' => $error,
-                'proxy_used' => !empty($proxy_address)
+                'proxy_used' => !empty($proxy_address),
+                'dns_resolved' => $dnsResolved, // 添加DNS解析信息
+                'resolved_ip' => $resolvedIp
             ];
         }
 
@@ -836,7 +908,9 @@ function executeRequest($url, $method, $request_headers, $hostsMap, $timeout, $p
         'error_details' => null,
         'curl_error_code' => null,
         'curl_error_message' => null,
-        'proxy_used' => !empty($proxy_address)
+        'proxy_used' => !empty($proxy_address),
+        'dns_resolved' => $dnsResolved, // 添加DNS解析信息
+        'resolved_ip' => $resolvedIp
     ];
 }
 
