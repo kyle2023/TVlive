@@ -8,7 +8,7 @@
  * - 支持302重定向跟随
  * - 强制使用IPv4解析域名
  * - 支持自定义请求头
- * - 集成IP归属地查询
+ * - 集成IP归属地查询（通过ip_query.php）
  */
 
 ob_start();
@@ -22,6 +22,9 @@ ini_set('max_execution_time', 30);
 ini_set('memory_limit', '128M');
 error_reporting(0);
 ini_set('display_errors', 0);
+
+// 包含IP查询模块 - 保持单独文件
+require_once 'ip_query.php';
 
 // 简单错误日志（可选）
 function logError($message) {
@@ -131,8 +134,9 @@ function testProxyConnectivity($data, $testAnonymity = false) {
     $proxy_ip = $proxy_parts[0];
     $proxy_port = intval($proxy_parts[1]);
     
-    // 查询代理IP的归属地
-    $proxyLocation = "代理IP: {$proxy_ip}";
+    // 查询代理IP的归属地 - 调用ip_query.php的函数
+    $proxyIPInfo = queryIPInfo($proxy_ip);
+    $proxyLocation = formatIPInfo($proxyIPInfo);
     
     // 测试代理的连通性
     $startTime = microtime(true);
@@ -219,7 +223,10 @@ function testProxyConnectivity($data, $testAnonymity = false) {
                 $ipData = json_decode($body, true);
                 if ($ipData && isset($ipData['origin'])) {
                     $realIp = $ipData['origin'];
-                    $realIPLocation = "真实IP: {$realIp}";
+                    
+                    // 查询真实IP的归属地 - 调用ip_query.php的函数
+                    $realIPInfo = queryIPInfo($realIp);
+                    $realIPLocation = formatIPInfo($realIPInfo);
                     
                     // 检查返回的IP是否与代理IP相同（简单匿名性检查）
                     $isAnonymous = ($realIp !== $proxy_ip);
