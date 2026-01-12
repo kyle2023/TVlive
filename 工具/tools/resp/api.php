@@ -449,7 +449,9 @@ function generateSuggestedFilename($url, $contentType, $headers) {
                     'suggested_filename' => $suggestedFilename,  // 添加建议的文件名
                     'original_url' => $result['final_url'] ?? $url
                 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))) {
-                    $result['download_url'] = 'proxy.php?download=' . $cacheId;
+                    // 替换生成下载链接的部分
+$script_name = basename($_SERVER['PHP_SELF']);
+$result['download_url'] = $script_name . '?download=' . $cacheId;
                     $result['download_available'] = true;
                     $result['suggested_filename'] = $suggestedFilename;  // 添加到结果中
                     cleanupOldCacheFiles(300);
@@ -466,7 +468,9 @@ function generateSuggestedFilename($url, $contentType, $headers) {
                     'suggested_filename' => $suggestedFilename,  // 添加建议的文件名
                     'original_url' => $result['final_url'] ?? $url
                 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))) {
-                    $result['download_url'] = 'proxy.php?download=' . $cacheId;
+                    // 替换生成下载链接的部分
+$script_name = basename($_SERVER['PHP_SELF']);
+$result['download_url'] = $script_name . '?download=' . $cacheId;
                     $result['body'] = substr($result['body'], 0, 2000) . "\n\n... (响应体超过2000字符，已截断前2000字符，请下载完整文件查看) ...";
                     $result['truncated'] = true;
                     $result['download_available'] = true;
