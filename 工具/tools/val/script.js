@@ -268,7 +268,7 @@ function parseChannelList(text) {
 
     function updateUrlCount() {
         const count = channelEntries.length;
-        if (urlCount) urlCount.textContent = `频道: ${count}`;
+        if (urlCount) urlCount.textContent = `${count}`;
         if (totalUrlsStat) totalUrlsStat.textContent = count;
     }
 
@@ -649,7 +649,7 @@ function parseChannelList(text) {
         }
         
         // 只显示最近5条记录
-        const displayRecords = testRecords.slice(0, 5);
+        const displayRecords = testRecords.slice(0, 20);
         
         displayRecords.forEach((record, index) => {
             const recordElement = document.createElement('div');

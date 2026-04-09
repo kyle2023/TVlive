@@ -58,7 +58,7 @@ try {
     $response = ['success' => false, 'error' => $e->getMessage()];
 }
 
-echo json_encode($response);
+echo json_encode($response, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
 
 /**
@@ -113,6 +113,19 @@ function testSocks5Proxy($data) {
         'protocol' => 'SOCKS5',
         'response_time' => round((microtime(true) - $startTime) * 1000, 2)
     ];
+}
+
+/**
+ * 净化URL：去除$及其后面的内容
+ */
+function cleanUrl($url) {
+    // 找到第一个$符号的位置
+    $dollarPos = strpos($url, '$');
+    if ($dollarPos !== false) {
+        // 截取$之前的部分
+        return substr($url, 0, $dollarPos);
+    }
+    return $url;
 }
 
 /**
@@ -174,11 +187,18 @@ function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 
             continue;
         }
 
+        // 净化URL：去除$及其后面的内容
+        $originalUrl = $url;
+        $cleanUrl = cleanUrl($url);
+        
+        // 如果URL被净化了，记录原始URL
+        $wasCleaned = ($cleanUrl !== $originalUrl);
+
         $startTime = microtime(true);
         
         // 执行请求（支持重定向）
         $requestResult = executeRequestWithHosts(
-            $url,
+            $cleanUrl,
             $hostsMap,
             $timeout,
             $proxyHost,
@@ -193,21 +213,40 @@ function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 
         $httpCode = $requestResult['status_code'];
         $contentType = $requestResult['content_type'] ?? '';
         $error = $requestResult['error'] ?? null;
+        $curlErrno = $requestResult['curl_errno'] ?? null;
         $responseTime = $requestResult['response_time'] ?? 0;
         $redirectChain = $requestResult['redirect_chain'] ?? [];
-        $effectiveUrl = $requestResult['effective_url'] ?? $url;
+        $effectiveUrl = $requestResult['effective_url'] ?? $cleanUrl;
         $responseBody = $requestResult['body'] ?? '';
         $hostsApplied = $requestResult['hosts_applied'] ?? [];
         $headers = $requestResult['headers'] ?? [];
 
+        // 判断请求是否成功（排除超时等网络错误）
+        $isSuccess = ($httpCode === 200 && $curlErrno !== 28);
+        
+        // 处理不同类型的错误
+        if ($curlErrno === 28) {
+            $errorMsg = "请求超时（{$timeout}秒）";
+            $statusCode = 408;
+        } elseif ($curlErrno !== 0) {
+            $errorMsg = $error ?: "网络错误";
+            $statusCode = 0;
+        } else {
+            $errorMsg = $error;
+            $statusCode = $httpCode;
+        }
+
         // 检查是否是状态码200
-        if ($httpCode !== 200) {
+        if ($statusCode !== 200 || $curlErrno === 28 || $curlErrno !== 0) {
             $results[] = [
-                'url' => $url,
+                'url' => $originalUrl,
+                'cleaned_url' => $wasCleaned ? $cleanUrl : null,
+                'was_cleaned' => $wasCleaned,
                 'success' => false,
-                'status_code' => $httpCode,
+                'status_code' => $statusCode,
+                'curl_errno' => $curlErrno,
                 'response_time' => $responseTime,
-                'error' => $error ?: "HTTP错误码: $httpCode",
+                'error' => $errorMsg ?: ($statusCode > 0 ? "HTTP错误码: $statusCode" : "请求失败"),
                 'is_m3u8' => false,
                 'm3u8_valid' => false,
                 'redirect_chain' => $redirectChain,
@@ -236,7 +275,7 @@ function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 
             $m3u8Info = analyzeM3U8Content($responseBody);
         }
 
-        $success = ($httpCode === 200);
+        $success = ($statusCode === 200);
         if ($success) {
             $successCount++;
             if ($isM3U8 && $m3u8Valid) {
@@ -247,9 +286,12 @@ function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 
         }
 
         $results[] = [
-            'url' => $url,
+            'url' => $originalUrl,
+            'cleaned_url' => $wasCleaned ? $cleanUrl : null,
+            'was_cleaned' => $wasCleaned,
             'success' => $success,
-            'status_code' => $httpCode,
+            'status_code' => $statusCode,
+            'curl_errno' => $curlErrno,
             'response_time' => $responseTime,
             'content_type' => $contentType,
             'is_m3u8' => $isM3U8,
@@ -259,7 +301,7 @@ function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 
             'effective_url' => $effectiveUrl,
             'hosts_applied' => $hostsApplied,
             'headers' => $headers,
-            'error' => $success ? null : ($error ?: "HTTP错误码: $httpCode")
+            'error' => $success ? null : ($errorMsg ?: "HTTP错误码: $statusCode")
         ];
     }
 
@@ -278,7 +320,7 @@ function batchTestM3U8ViaProxy($data, $customUA = '', $referer = '', $timeout = 
 }
 
 /**
- * 执行单个请求（支持重定向和hosts解析）- 修复版
+ * 执行单个请求（支持重定向和hosts解析）- 增强错误处理版
  */
 function executeRequestWithHosts($url, $hostsMap, $timeout, $proxyHost, $proxyPort, $proxyUsername, $proxyPassword, $forceIPv4, $customUA, $referer) {
     $maxRedirects = 10;
@@ -293,11 +335,14 @@ function executeRequestWithHosts($url, $hostsMap, $timeout, $proxyHost, $proxyPo
         if (!$parsedUrl || !isset($parsedUrl['host'])) {
             return [
                 'status_code' => 400,
+                'curl_errno' => 0,
                 'error' => '无效的URL格式: ' . $currentUrl,
                 'response_time' => 0,
                 'redirect_chain' => $redirectChain,
                 'effective_url' => $currentUrl,
-                'hosts_applied' => $hostsApplied
+                'hosts_applied' => $hostsApplied,
+                'body' => '',
+                'headers' => []
             ];
         }
         
@@ -339,7 +384,7 @@ function executeRequestWithHosts($url, $hostsMap, $timeout, $proxyHost, $proxyPo
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_FOLLOWLOCATION => false, // 手动处理重定向
             CURLOPT_ENCODING => '',
-            CURLOPT_USERAGENT => $customUA ?: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0 Safari/537.36',
+            CURLOPT_USERAGENT => $customUA ?: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             CURLOPT_FAILONERROR => false,
         ];
         
@@ -384,19 +429,52 @@ function executeRequestWithHosts($url, $hostsMap, $timeout, $proxyHost, $proxyPo
         $curlErrno = curl_errno($ch);
         $responseTime = round(curl_getinfo($ch, CURLINFO_TOTAL_TIME) * 1000, 0);
         
+        // 详细错误处理
+        if ($curlErrno === 28) {
+            // 超时错误
+            curl_close($ch);
+            return [
+                'status_code' => 0,
+                'curl_errno' => 28,
+                'content_type' => '',
+                'error' => "请求超时（{$timeout}秒）",
+                'response_time' => $timeout * 1000,
+                'redirect_chain' => $redirectChain,
+                'effective_url' => $currentUrl,
+                'body' => '',
+                'hosts_applied' => $hostsApplied,
+                'headers' => []
+            ];
+        } elseif ($curlErrno !== 0) {
+            // 其他cURL错误
+            curl_close($ch);
+            return [
+                'status_code' => 0,
+                'curl_errno' => $curlErrno,
+                'content_type' => '',
+                'error' => "cURL错误 ({$curlErrno}): {$curlError}",
+                'response_time' => $responseTime,
+                'redirect_chain' => $redirectChain,
+                'effective_url' => $currentUrl,
+                'body' => '',
+                'hosts_applied' => $hostsApplied,
+                'headers' => []
+            ];
+        }
+        
         // 获取响应头和响应体
         $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $headerStr = substr($response, 0, $headerSize);
         $body = substr($response, $headerSize);
         
         // 解析响应头
-        $headers = parseHeaders($headerStr);
+        $responseHeaders = parseHeaders($headerStr);
         
         curl_close($ch);
         
         // 检查是否应该跟随重定向
         $shouldFollowRedirect = ($httpCode >= 300 && $httpCode < 400) && 
-                                isset($headers['location']) && 
+                                isset($responseHeaders['location']) && 
                                 $redirectCount < $maxRedirects;
         
         if ($shouldFollowRedirect) {
@@ -404,11 +482,11 @@ function executeRequestWithHosts($url, $hostsMap, $timeout, $proxyHost, $proxyPo
             $redirectChain[] = [
                 'status' => $httpCode,
                 'url' => $currentUrl,
-                'redirect_to' => $headers['location']
+                'redirect_to' => $responseHeaders['location']
             ];
             
             // 解析重定向URL
-            $newUrl = $headers['location'];
+            $newUrl = $responseHeaders['location'];
             if (!isAbsoluteUrl($newUrl)) {
                 $newUrl = resolveRelativeUrl($currentUrl, $newUrl);
             }
@@ -422,14 +500,15 @@ function executeRequestWithHosts($url, $hostsMap, $timeout, $proxyHost, $proxyPo
         // 请求完成
         return [
             'status_code' => $httpCode,
+            'curl_errno' => 0,
             'content_type' => $contentType,
-            'error' => $curlError ?: null,
+            'error' => null,
             'response_time' => $responseTime,
             'redirect_chain' => $redirectChain,
             'effective_url' => $currentUrl,
             'body' => $body,
             'hosts_applied' => $hostsApplied,
-            'headers' => $headers
+            'headers' => $responseHeaders
         ];
     }
 }
