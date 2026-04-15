@@ -1,0 +1,80 @@
+#!/bin/sh
+
+LOG_DIR="/usr/share/myfile"
+TARGET_IPTVIFACE="iptv"
+TARGET_IPTVDEVICE="eth4"
+
+echolog() {
+    local d="$(date "+%Y-%m-%d %H:%M:%S")"
+    echo "$d: [Hotplug iptv]$*" >> "$LOG_DIR/iptvgateway.log"
+}
+
+if [ "$INTERFACE" = "$TARGET_IPTVIFACE" ]; then
+    if [ "$ACTION" = "ifup" ] ; then
+        (
+            success=0
+
+            # 等待 IPTV端口 获得 IPv4 地址（最多 20 秒）
+            for i in $(seq 1 10); do
+                ADDR_LINE=$(ip -4 addr show dev "$TARGET_IPTVDEVICE" scope global \
+                    | grep 'inet ' | head -n1)
+
+                if [ -n "$ADDR_LINE" ]; then
+                    IPADDR=$(echo "$ADDR_LINE" | awk '{print $2}' | cut -d/ -f1)
+                    MASK=$(echo "$ADDR_LINE" | awk '{print $2}' | cut -d/ -f2)
+                    success=1
+                    seconds=$((i * 2 + 2))
+                    break
+                fi
+
+                sleep 2
+            done
+
+            [ "$success" -ne 1 ] && exit 0
+
+            # /32 无法计算网关
+            [ "$MASK" -eq 32 ] && exit 0
+
+            # ---------- 计算 network + 1 ----------
+            ip2int() {
+                IFS=. read a b c d <<EOF
+$1
+EOF
+                echo $(( (a<<24) + (b<<16) + (c<<8) + d ))
+            }
+
+            int2ip() {
+                echo "$(( ($1>>24)&255 )).$(( ($1>>16)&255 )).$(( ($1>>8)&255 )).$(( $1&255 ))"
+            }
+
+            IP_INT=$(ip2int "$IPADDR")
+            NETMASK_INT=$(( 0xFFFFFFFF << (32-MASK) & 0xFFFFFFFF ))
+            NETWORK_INT=$(( IP_INT & NETMASK_INT ))
+            GATEWAY_INT=$(( NETWORK_INT + 1 ))
+            GATEWAY=$(int2ip "$GATEWAY_INT")
+
+            echolog "IPTV端口已启动，当前IP为：${IPADDR}/$MASK 当前网关为 $GATEWAY"
+
+            uci show network | grep '=route' | while read line; do
+                INDEX=$(echo "$line" | sed -n 's/.*@route\[\([0-9]*\)\]=route/\1/p')
+                
+                [ -z "$INDEX" ] && continue
+
+                IFACE=$(uci get network.@route[$INDEX].interface 2>/dev/null)
+                
+                if [ "$IFACE" = "iptv" ]; then
+                    OLD_GW=$(uci get network.@route[$INDEX].gateway 2>/dev/null)
+                    if [ "$OLD_GW" != "$GATEWAY" ]; then
+                        uci set network.@route[$INDEX].gateway="$GATEWAY"
+                    fi
+                fi
+            done
+
+            echolog "IPTV路由网关更改成功！"
+            uci commit network
+            /etc/init.d/network reload
+
+            echo "" >> "$LOG_FILE"
+        ) &
+    fi
+fi
