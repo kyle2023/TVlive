@@ -30,7 +30,42 @@ $proxyPass = isset($_GET['proxy_pass']) ? $_GET['proxy_pass'] : '';
 $script_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https://' : 'http://')
               . $_SERVER['HTTP_HOST']
               . $_SERVER['SCRIPT_NAME'];
-
+// ======================== Bing每日图片接口 ========================
+if ($action === 'bing') {
+    $bingUrl = 'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN';
+    
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $bingUrl,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_USERAGENT => USER_AGENT,
+    ]);
+    
+    $response = curl_exec($ch);
+    $error = curl_error($ch);
+    curl_close($ch);
+    
+    if ($error || $response === false) {
+        // 失败时使用固定的备选图片
+        $fallbackUrl = 'https://bing.com/th?id=OHR.Default_ZH-CN1920x1080.jpg';
+        header('Location: ' . $fallbackUrl);
+        exit;
+    }
+    
+    $data = json_decode($response, true);
+    if ($data && isset($data['images'][0]['url'])) {
+        $imageUrl = 'https://www.bing.com' . $data['images'][0]['url'];
+        header('Location: ' . $imageUrl);
+    } else {
+        $fallbackUrl = 'https://bing.com/th?id=OHR.Default_ZH-CN1920x1080.jpg';
+        header('Location: ' . $fallbackUrl);
+    }
+    exit;
+}
 // ======================== 测试接口 ========================
 if ($action === 'test') {
     header('Content-Type: application/json');

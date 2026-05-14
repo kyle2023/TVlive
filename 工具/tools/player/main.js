@@ -33,7 +33,7 @@ const supportedFormats = ['mp4', 'm3u8', 'flv', 'webm', 'mkv', 'mov', 'avi', 'wm
 
 let transformSettings = { rotate: 0, scaleX: 1, scaleY: 1, zoom: 100 };
 let filterSettings = { brightness: 100, contrast: 100, saturation: 100, sharpen: 0 };
-let backgroundSettings = { url: 'https://my.bing.xo.je/302/uhd_302.php', blur: 0 };
+let backgroundSettings = { url: 'proxy.php?action=bing', blur: 0 };
 
 const filterPresets = {
   vibrant: { brightness: 105, contrast: 110, saturation: 150, sharpen: 0 },
@@ -1732,7 +1732,7 @@ function setupBackgroundSettings() {
   const resetBtn = document.getElementById('resetBackgroundBtn');
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
-      backgroundSettings = { url: 'https://my.bing.xo.je/302/uhd_302.php', blur: 0 };
+      backgroundSettings = { url: 'proxy.php?action=bing', blur: 0 };
       if (urlInput) urlInput.value = backgroundSettings.url;
       if (blurSlider) blurSlider.value = 0;
       if (blurValue) blurValue.textContent = '0px';
