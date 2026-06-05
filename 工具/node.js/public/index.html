@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Check Socks5</title>
+    <!-- 添加 favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2361dbff' stroke-width='2'%3E%3Cpath d='M12 3l7 3v5c0 5-3.4 8.74-7 10-3.6-1.26-7-5-7-10V6l7-3z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-shell">
+        <div class="ambient ambient-one"></div>
+        <div class="ambient ambient-two"></div>
+
+        <header class="site-header">
+            <div class="brand">
+                <div class="brand-title">Check Socks5</div>
+                <div class="brand-chip">
+                    <span class="brand-chip-text">
+                        <span class="brand-dot"></span>
+                        <span>Node.js Edition</span>
+                    </span>
+                    <button class="theme-toggle" type="button" id="themeToggle">
+                        <span class="theme-toggle-switch">
+                            <svg class="theme-toggle-icon theme-toggle-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path></svg>
+                            <span class="theme-toggle-thumb"></span>
+                            <svg class="theme-toggle-icon theme-toggle-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="header-note">基于 Node.js 构建的 SOCKS5 / HTTP / HTTPS 代理检测工具，支持单个或批量代理解析、可用性验证与出口信息查看。</div>
+        </header>
+
+        <main class="site-main">
+            <section class="workspace-grid">
+                <!-- 左侧：控制面板 -->
+                <div class="surface-card control-panel">
+                    <div class="panel-header">
+                        <div>
+                            <p class="section-kicker">Workspace</p>
+                            <h2 class="panel-title">开始检测</h2>
+                            <p class="panel-copy">输入单个代理链接、IP:端口或一整段列表，支持 SOCKS5 / HTTP / HTTPS。缺少协议头时会自动按 socks5:// 处理。</p>
+                        </div>
+                        <div class="panel-badge">实时解析与验证</div>
+                    </div>
+
+                    <div class="input-zone">
+                        <label class="field-label" for="inputList">代理链接</label>
+                        <div class="history-wrapper" id="inputWrapper">
+                            <!-- 单行输入框（单目标模式，默认显示） -->
+                            <input type="text" class="input-control input-single" id="inputList" placeholder="例如：socks5://user:pass@proxy.example.com:1080">
+                            <!-- 多行输入框（批量模式，默认隐藏） -->
+                            <textarea class="input-control input-batch" id="inputListBatch" rows="5" placeholder="例如：&#10;socks5://user:pass@proxy.example.com:1080&#10;http://1.1.1.1:8080&#10;https://8.8.8.8:443&#10;192.168.1.100:3128（将自动添加 socks5://）" style="display: none;"></textarea>
+                            <button class="history-toggle" id="historyToggle" type="button">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </button>
+                            <div class="history-dropdown" id="historyDropdown">
+                                <div class="history-empty">暂无检测记录</div>
+                            </div>
+                        </div>
+                        <p class="field-hint" id="fieldHint">单目标模式：输入单个代理地址，按 Enter 开始检测。</p>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="mode-card">
+                            <div class="mode-copy">
+                                <strong>批量检测</strong>
+                                <div class="mode-state" id="modeLabel">Single / 单目标</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="batchMode">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <button class="primary-btn" id="checkBtn" type="button">
+                            <span>开始检测</span>
+                            <small>Resolve + Check</small>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 右侧：统计面板 -->
+                <aside class="side-column">
+                    <div class="surface-card side-card summary-card">
+                        <div class="summary-top">
+                            <div class="summary-copy">
+                                <p class="section-kicker">Summary</p>
+                                <h3 class="summary-title" id="summaryHeadline">等待输入</h3>
+                                <p class="summary-description" id="summaryDescription">实时统计和检测概览。</p>
+                            </div>
+                        </div>
+                        <div id="progressContainer" class="progress-container">
+                            <div class="progress-head">
+                                <span>检测进度</span>
+                                <span id="progressText">尚未开始</span>
+                            </div>
+                            <div class="progress-track">
+                                <div id="progressBar" class="progress-bar"></div>
+                            </div>
+                        </div>
+                        <div class="summary-grid">
+                            <div class="metric-card"><span>目标数</span><strong id="statTotal">0</strong></div>
+                            <div class="metric-card"><span>有效</span><strong id="statSuccess">0</strong></div>
+                            <div class="metric-card"><span>待完成</span><strong id="statPending">0</strong></div>
+                            <div class="metric-card"><span>失败</span><strong id="statFailed">0</strong></div>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- 结果区域 -->
+            <section class="surface-card results-shell">
+                <div class="results-header">
+                    <div>
+                        <p class="section-kicker">Results</p>
+                        <h2 class="results-title">检测结果</h2>
+                        <p class="results-subtitle" id="resultMeta">结果、落地 IP 和地图会在这里按检测进度逐步展开。</p>
+                    </div>
+                    <div class="results-pill state-idle" id="resultPill">Idle</div>
+                </div>
+
+                <div class="results-empty" id="resultsEmpty">
+                    <div class="empty-visual"><span></span><span></span><span></span></div>
+                    <div class="empty-copy">
+                        <h3 id="emptyStateTitle">等待开始检测</h3>
+                        <p id="emptyStateDescription">输入目标后，检测结果、出口信息和地图会在这里展示。</p>
+                    </div>
+                </div>
+
+                <div class="results-filters" id="resultsFilters" hidden>
+                    <button class="filter-toggle" id="filterToggle" type="button">
+                        <span id="filterToggleText">筛选：全部结果</span>
+                        <span class="filter-toggle-icon"><svg viewBox="0 0 12 12" width="10" height="10"><path d="M2.5 4.25L6 7.75L9.5 4.25" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></span>
+                    </button>
+                    <div class="filter-panel" id="filterPanel" hidden>
+                        <div class="filter-row"><span class="filter-row-label">状态</span><div class="filter-options" id="statusFilterGroup"></div></div>
+                        <div class="filter-row"><span class="filter-row-label">协议</span><div class="filter-options" id="protocolFilterGroup"></div></div>
+                    </div>
+                </div>
+                <div class="filter-empty" id="filterEmpty" hidden>当前筛选没有匹配的检测结果。</div>
+                <div id="results" class="results-list"></div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div>© 2025 - 2026 Check Socks5 · 基于 Node.js 构建 · 今日访问人数：<span id="visit-count">---</span></div>
+        </footer>
+    </div>
+
+    <div id="map-template" style="display: none;"><div id="global-map"></div></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
